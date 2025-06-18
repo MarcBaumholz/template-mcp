@@ -27,7 +27,7 @@ def get_rag_tools():
     """Lazy import RAG tools to speed up startup"""
     global _rag_tools
     if _rag_tools is None:
-        from tools.rag_tools import (
+        from rag_tools import (
             test_rag_system, list_rag_collections, upload_openapi_spec_to_rag,
             retrieve_from_rag, delete_rag_collection,
             analyze_fields_with_rag_and_llm, enhance_csv_with_rag
@@ -149,10 +149,20 @@ def upload_api_specification(openapi_file_path: str, collection_name: str, metad
     return tools['upload_openapi_spec_to_rag'](openapi_file_path, collection_name, metadata)
 
 @mcp.tool()
-def query_api_specification(query: str, collection_name: str, limit: int = 5, score_threshold: float = 0.5) -> str:
-    """Perform a direct query against a specified API collection to retrieve raw documentation snippets"""
+def query_api_specification(
+    query: str, 
+    collection_name: str, 
+    limit: int = 5, 
+    score_threshold: float = 0.5,
+    current_path: str = ""
+) -> str:
+    """Perform a direct query against a specified API collection to retrieve raw documentation snippets and save results as markdown"""
     tools = get_rag_tools()
-    return tools['retrieve_from_rag'](query, collection_name, limit, score_threshold)
+    
+    # Convert empty string to None for backward compatibility
+    current_path_arg = current_path if current_path else None
+    
+    return tools['retrieve_from_rag'](query, collection_name, limit, score_threshold, current_path_arg)
 
 @mcp.tool()
 def delete_api_specification(collection_name: str) -> str:
@@ -161,15 +171,20 @@ def delete_api_specification(collection_name: str) -> str:
     return tools['delete_rag_collection'](collection_name)
 
 @mcp.tool()
-def analyze_api_fields(
+def analyze_fields_with_rag_and_llm(
     fields_to_analyze: List[str], 
     collection_name: str = "flip_api_v2", 
-    context_topic: Optional[str] = None,
-    current_path: Optional[str] = None
+    context_topic: str = "",
+    current_path: str = ""
 ) -> str:
-    """Analyze a list of fields against an API spec using LLM to synthesize findings. Optional current_path for more accurate results"""
+    """Analyze a list of fields against an API spec using LLM to synthesize findings. Optional current_path parameter to specify where to save analysis files"""
     tools = get_rag_tools()
-    return tools['analyze_fields_with_rag_and_llm'](fields_to_analyze, collection_name, context_topic, current_path)
+    
+    # Convert empty strings to None for backward compatibility
+    context_topic_arg = context_topic if context_topic else None
+    current_path_arg = current_path if current_path else None
+    
+    return tools['analyze_fields_with_rag_and_llm'](fields_to_analyze, collection_name, context_topic_arg, current_path_arg)
 
 @mcp.tool()
 def enhance_csv_with_rag(csv_file_path: str, collection_name: str, context_query: str, output_dir: Optional[str] = None) -> str:

@@ -283,13 +283,95 @@ def upload_openapi_spec_to_rag(file_path: str, collection_name: str, metadata: O
         return f"Error: {str(e)}"
 
 
-def retrieve_from_rag(query: str, collection_name: str, limit: int = 5, score_threshold: float = 0.5) -> List[Dict]:
-    """Retrieve relevant information from the RAG system."""
+def retrieve_from_rag(query: str, collection_name: str, limit: int = 5, score_threshold: float = 0.5, current_path: Optional[str] = None) -> str:
+    """Retrieve relevant information from the RAG system and optionally save as markdown."""
     try:
         rag = get_rag_system()
-        return rag.query(query, collection_name, limit, score_threshold)
+        results = rag.query(query, collection_name, limit, score_threshold)
+        
+        # If current_path is provided, create markdown and save file
+        if current_path:
+            # Format results as markdown content
+            from datetime import datetime
+            
+            markdown_content = f"# API Query Results\n\n"
+            markdown_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+            markdown_content += f"**Query:** {query}\n"
+            markdown_content += f"**Collection:** {collection_name}\n"
+            markdown_content += f"**Results Found:** {len([r for r in results if 'error' not in r])}\n"
+            markdown_content += f"**Score Threshold:** {score_threshold}\n"
+            markdown_content += f"**Current Path:** {current_path}\n"
+            markdown_content += f"\n---\n\n"
+            
+            # Format each result
+            for i, result in enumerate(results, 1):
+                if 'error' in result:
+                    markdown_content += f"## ❌ Error\n\n{result['error']}\n\n"
+                else:
+                    markdown_content += f"## 📋 Result {i} (Score: {result['score']:.3f})\n\n"
+                    markdown_content += f"```\n{result['text']}\n```\n\n"
+                    
+                    # Add metadata if available
+                    if 'metadata' in result and result['metadata']:
+                        markdown_content += f"**Metadata:**\n"
+                        for key, value in result['metadata'].items():
+                            markdown_content += f"- {key}: `{value}`\n"
+                        markdown_content += f"\n"
+            
+            # Save markdown file
+            try:
+                import os
+                
+                # Use the provided current_path
+                current_dir = Path(current_path)
+                if not current_dir.exists():
+                    return f"Error: Provided path does not exist: {current_path}"
+                if not os.access(current_dir, os.W_OK):
+                    return f"Error: No write permission for path: {current_path}"
+                
+                # Create outputs subdirectory to keep files organized
+                outputs_dir = current_dir / "outputs"
+                outputs_dir.mkdir(exist_ok=True)
+                
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                # Clean query for filename (remove special chars, limit length)
+                safe_query = "".join(c for c in query if c.isalnum() or c in (' ', '_')).strip()
+                safe_query = safe_query.replace(' ', '_')[:30]
+                filename = f"query_{safe_query}_{timestamp}.md"
+                filepath = outputs_dir / filename
+                
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    f.write(markdown_content)
+                
+                return f"Query completed successfully!\n\nResults: {len([r for r in results if 'error' not in r])} relevant documents found\nMarkdown report saved to: {filepath}\n\n{markdown_content}"
+                
+            except Exception as e:
+                # Fallback: save to home directory
+                try:
+                    home_dir = Path.home() / "mcp_query_output"
+                    home_dir.mkdir(exist_ok=True)
+                    
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    safe_query = "".join(c for c in query if c.isalnum() or c in (' ', '_')).strip()
+                    safe_query = safe_query.replace(' ', '_')[:30]
+                    filename = f"query_{safe_query}_{timestamp}.md"
+                    filepath = home_dir / filename
+                    
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        f.write(markdown_content)
+                    
+                    return f"Query completed! Markdown saved to home directory: {filepath}\n\n{markdown_content}"
+                    
+                except Exception as final_error:
+                    return f"Query completed but file save failed: {str(e)}, Final fallback failed: {str(final_error)}\n\n{markdown_content}"
+        
+        else:
+            # Return the original JSON format for backward compatibility when no current_path
+            import json
+            return json.dumps(results, indent=2)
+        
     except Exception as e:
-        return [{'error': f"Retrieval failed: {str(e)}"}]
+        return f"Error: Retrieval failed: {str(e)}"
 
 
 def list_rag_collections() -> str:
