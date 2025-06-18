@@ -1,0 +1,26 @@
+# MCP Core Dependencies
+mcp==1.1.0
+annotated-types==0.7.0
+anyio==4.8.0
+httpx==0.28.1
+pydantic==2.10.4
+pydantic-core==2.27.2
+typing-extensions==4.12.2
+
+# RAG and ML Dependencies
+sentence-transformers==3.3.1
+qdrant-client==1.14.2
+numpy==2.2.6
+PyYAML==6.0.2
+pandas==2.2.3
+
+# LLM Client Dependencies (OpenRouter compatible)
+openai==1.86.0
+httpx==0.28.1
+
+# Environment Management
+python-dotenv==1.0.1
+
+# Development and Testing
+pytest==8.3.4
+black==24.10.0

@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Simple HR API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/absences": {
+      "post": {
+        "summary": "Create Absence Request",
+        "description": "Creates a new absence request for an employee.",
+        "operationId": "createAbsence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employee_id": {
+                    "type": "string",
+                    "description": "The unique identifier for the employee."
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "The start date of the absence."
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "The end date of the absence."
+                  },
+                  "reason": {
+                    "type": "string",
+                    "description": "The reason for the absence (e.g., vacation, sick)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Absence request created."
+          }
+        }
+      }
+    },
+    "/employees/{id}": {
+      "get": {
+        "summary": "Get Employee",
+        "description": "Retrieves details for a specific employee.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee details."
+          }
+        }
+      }
+    }
+  }
+} 

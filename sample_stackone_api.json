@@ -1,0 +1,140 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "StackOne HRIS API",
+    "version": "2.0.0"
+  },
+  "paths": {
+    "/employees": {
+      "get": {
+        "summary": "List employees",
+        "parameters": [
+          {
+            "name": "department_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "employment_status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "inactive",
+                "terminated"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/employees/{employee_id}/time-off": {
+      "get": {
+        "summary": "Get time off requests",
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "approved",
+                "rejected"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Employee": {
+        "type": "object",
+        "properties": {
+          "employee_id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "First name"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Last name"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address"
+          },
+          "department_id": {
+            "type": "string",
+            "description": "Department ID"
+          },
+          "employment_status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive",
+              "terminated"
+            ]
+          }
+        }
+      },
+      "TimeOffRequest": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "description": "Request ID"
+          },
+          "employee_id": {
+            "type": "string",
+            "description": "Employee ID"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Start date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "End date"
+          },
+          "request_type": {
+            "type": "string",
+            "enum": [
+              "vacation",
+              "sick",
+              "personal"
+            ],
+            "description": "Request type"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved",
+              "rejected"
+            ],
+            "description": "Status"
+          }
+        }
+      }
+    }
+  }
+}
