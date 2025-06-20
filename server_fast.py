@@ -12,6 +12,18 @@ from typing import Any, Dict, List, Optional
 
 from fastmcp import FastMCP
 
+# Load environment variables
+try:
+    from dotenv import load_dotenv
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    env_path = os.path.join(script_dir, '.env')
+    load_dotenv(env_path)
+    print(f"[DEBUG] Loading .env from: {env_path}")
+    print(f"[DEBUG] OPENROUTER_API_KEY loaded: {'Yes' if os.getenv('OPENROUTER_API_KEY') else 'No'}")
+except ImportError:
+    pass  # dotenv not available, environment variables should be set manually
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("template-mcp-fast")
@@ -198,9 +210,9 @@ async def intelligent_schema_mapping(
     source_json_path: str,
     target_collection_name: str,
     mapping_context: str,
-    source_analysis_md_path: Optional[str] = None,
+    source_analysis_md_path: str = "",
     max_matches_per_field: int = 3,
-    output_path: Optional[str] = None
+    output_path: str = ""
 ) -> str:
     """
     Intelligent schema mapping using multi-agent AI system with RAG-based target field discovery.
@@ -211,14 +223,18 @@ async def intelligent_schema_mapping(
     try:
         from tools.mapping_models import SchemaMappingRequest
         
+        # Convert empty strings to None for backward compatibility
+        source_analysis_md_path_arg = source_analysis_md_path if source_analysis_md_path else None
+        output_path_arg = output_path if output_path else None
+        
         # Create request object
         request = SchemaMappingRequest(
             source_json_path=source_json_path,
-            source_analysis_md_path=source_analysis_md_path,
+            source_analysis_md_path=source_analysis_md_path_arg,
             target_collection_name=target_collection_name,
             mapping_context=mapping_context,
             max_matches_per_field=max_matches_per_field,
-            output_path=output_path or "schema_mapping_report.md"
+            output_path=output_path_arg or "schema_mapping_report.md"
         )
         
         # Get mapping tool and run analysis
@@ -226,15 +242,15 @@ async def intelligent_schema_mapping(
         report = await mapping_tool.map_schema(request)
         
         # Generate markdown report
-        from tools.report_generator import ReportGenerator
-        generator = ReportGenerator()
-        markdown_content = generator.generate_markdown_report(report)
+        from tools.report_generator import MarkdownReportGenerator
+        generator = MarkdownReportGenerator()
+        markdown_content = generator.generate_report(report)
         
         # Save report if output path specified
-        if output_path:
-            with open(output_path, 'w', encoding='utf-8') as f:
+        if output_path_arg:
+            with open(output_path_arg, 'w', encoding='utf-8') as f:
                 f.write(markdown_content)
-            return f"Schema mapping completed successfully. Report saved to: {output_path}"
+            return f"Schema mapping completed successfully. Report saved to: {output_path_arg}"
         else:
             return markdown_content
             
