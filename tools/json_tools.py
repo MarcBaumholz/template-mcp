@@ -403,7 +403,10 @@ Look for:
 3. Business status and categories (status, reason, type)
 4. Business amounts and quantities
 5. Business flags and settings (is_active, enabled, etc.)
-
+6. Business identifiers (id, code, number)
+7. Business names and descriptions (name, description, title)
+8. Business references and links (url, link, href)‚
+9. Paths and events or event types (path, event, event_type)
 Return a JSON object with ONLY the clean variable names (not full paths):
 
 {{

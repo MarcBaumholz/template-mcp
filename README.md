@@ -171,6 +171,98 @@ Add to your Cursor MCP settings:
      - Confidence scoring and mapping recommendations
      - Detailed Markdown report generation
 
+### Field Enhancement Tool
+
+Enhances extracted JSON fields with semantic metadata and business intelligence using LangGraph agent.
+
+**Function**: `enhance_json_fields`
+
+**Input**:
+- `json_result_path`: Path to JSON extraction result file
+- `current_directory`: Directory where enhanced results should be saved (optional)
+
+**Output**: Enhanced JSON with semantic metadata, saved as `enhanced_result.json`
+
+**Example**:
+```json
+{
+  "tool": "enhance_json_fields",
+  "arguments": {
+    "json_result_path": "./test_extraction_result.json",
+    "current_directory": "./"
+  }
+}
+```
+
+**Features**:
+- ✅ Semantic field analysis with LLM processing
+- ✅ Business context enrichment and metadata extraction
+- ✅ Field type classification and validation rules
+- ✅ Confidence scoring and quality assessment
+- ✅ Professional reporting with actionable insights
+
+### 🔍 Proof Tool - Field Mapping Verification & Creative Solutions
+
+The **Proof Tool** is a powerful verification system that generates comprehensive prompts for Cursor to double-check field mappings and provide creative solutions for unmapped fields.
+
+**Function**: `generate_proof_prompt`
+
+**Input**:
+- `mapping_report_path`: Path to the mapping analysis report
+- `api_spec_path`: Path to the OpenAPI specification
+- `current_path`: Current working directory path (optional, defaults to "reports")
+- `collection_name`: RAG collection name for API spec (optional, defaults to "flip_api_v2")
+
+**Output**: Comprehensive prompt string for Cursor with verification tasks and creative solutions
+
+**Example**:
+```json
+{
+  "tool": "generate_proof_prompt",
+  "arguments": {
+    "mapping_report_path": "reports/mapping_analysis.md",
+    "api_spec_path": "specs/api.json",
+    "current_path": "reports",
+    "collection_name": "flip_api_v2"
+  }
+}
+```
+
+**Features**:
+- 🔍 **Automated Verification**: Analyzes existing mapping reports to identify gaps
+- 🔎 **Smart Field Detection**: Extracts unmapped fields using AI analysis
+- 🧠 **Creative Solutions**: Generates innovative approaches for handling unmapped fields
+- 📚 **RAG Integration**: Searches API specifications for missed opportunities
+- 💡 **Implementation Ideas**: Provides ready-to-use code examples
+- 📝 **Comprehensive Prompts**: Creates detailed instructions for Cursor
+
+**What the Proof Tool Does**:
+1. **Reads** your mapping analysis report
+2. **Identifies** unmapped or problematic fields
+3. **Searches** the API specification using RAG for missed opportunities
+4. **Generates** creative solutions for each unmapped field
+5. **Creates** a comprehensive prompt with:
+   - Verification tasks for existing mappings
+   - Search strategies for missed fields
+   - Creative problem-solving approaches
+   - Implementation code examples
+   - Best practice recommendations
+
+**Output Structure**:
+The tool generates a detailed markdown prompt containing:
+- 📋 **Verification Instructions**: Step-by-step tasks for checking mappings
+- 🔍 **Search Strategies**: How to find missed fields in API specs
+- 💡 **Creative Solutions**: Specific approaches for unmapped fields
+- 🚀 **Implementation Guidelines**: Code examples and best practices
+- ✅ **Deliverables**: Clear expectations for the verification process
+
+**Example Use Cases**:
+- Double-check mapping accuracy before implementation
+- Find creative solutions for complex field transformations
+- Ensure no API fields were missed during analysis
+- Generate implementation strategies for edge cases
+- Create comprehensive verification workflows
+
 ## 📁 Project Structure
 
 ```
@@ -251,6 +343,34 @@ template-mcp/
   "max_matches_per_field": 3,
   "output_path": "/path/to/mapping_report.md"
 }
+```
+
+## 🔍 Enhanced RAG System Features
+
+### OpenAPI 2.0 & 3.x Support
+The RAG system now fully supports both OpenAPI 2.0 and 3.x specifications:
+
+- **OpenAPI 3.x**: Processes `components/schemas` sections
+- **OpenAPI 2.0**: Processes `definitions` sections with `allOf` structure support
+- **Enhanced Property Extraction**: Extracts type, description, example, format, and $ref data
+- **Smart Query Enhancement**: Automatically adds context terms for better semantic matching
+
+### Example Queries That Now Work
+```bash
+# These queries will now find timeOffEntries definitions:
+- "timeOffEntries"
+- "time off entries" 
+- "units employee date"
+- "timeOffRequest employee"
+- "paid time off request"
+```
+
+### Testing Enhanced RAG
+Run the test script to verify functionality:
+```bash
+cd mcp-personal-server-py/template-mcp
+source venv/bin/activate
+python test_enhanced_rag.py
 ```
 
 ## 🐛 Troubleshooting
