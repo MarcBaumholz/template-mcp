@@ -12,7 +12,7 @@ JSON Data:
 
 AUFGABE:
 1. Identifiziere die Kernfelder des JSON-Payloads 
-2. Extrahiere API-Path und Event-Typ/body falls vorhanden
+2. Extrahiere body falls vorhanden
 3. Bewerte die Vollständigkeit und Validität der Daten
 4. Gib eine Konfidenz-Bewertung (0.0-1.0) für die Extraktion ab
 5. Füge relevanten Kontext für weitere Verarbeitung hinzu
@@ -31,7 +31,7 @@ FORMAT der Antwort als valides JSON (wird vom LangGraph Agent geparst):
     "extracted_fields": {{
         "path": "API-Path oder null",
         "event_type": "Event-Typ oder null",
-        "body": "Body oder null",
+        ,
         ...
     }},
     "validation_status": "valid|incomplete|invalid",

@@ -1,5 +1,5 @@
 """
-LangGraph Agent für JSON Feldextraktion mit OpenRouter/DeepSeek.
+LangGraph Agent for JSON Field Extraction with OpenRouter/DeepSeek.
 """
 import json
 import os
@@ -20,19 +20,19 @@ load_dotenv()
 
 
 class AgentState(TypedDict):
-    """State für den LangGraph Agent."""
+    """State for the LangGraph Agent."""
     json_data: Dict[str, Any]
     extracted_fields: Dict[str, Any]
     validation_status: str
     confidence_score: float
     processing_notes: str
-    context: str  # <- Context hinzugefügt
+    context: str  # <- Context added
     error: str
     status: str
 
 
 class FieldExtractionAgent:
-    """LangGraph Agent für Feldextraktion."""
+    """LangGraph Agent for Field Extraction."""
     
     def __init__(self):
         """Initialize the LangGraph field extraction agent."""

@@ -32,6 +32,21 @@
   - Generates creative solutions for handling unmapped fields
   - Provides implementation ideas and code examples
   - Includes complete test coverage and documentation
+- [x] **2025-01-22 - Combined JSON Analysis Tool with LangGraph** - **COMPLETED**
+  - Kombiniert Schritt 2 (JSON-Feldextraktion) und Schritt 3 (RAG-Analyse) in einem einzigen MCP-Tool
+  - Implementiert mit LangGraph für strukturierten Workflow
+  - Rekursive Extraktion aller JSON-Felder mit Metadaten
+  - Automatische RAG-basierte Analyse mit Flip API-Spezifikation
+  - Generiert umfassende Berichte mit Mapping-Empfehlungen
+  - Vollständige Integration in MCP Server als `analyze_json_fields_with_rag`
+  - Getestet und funktionsfähig (API-Key erforderlich für LLM-Features)
+- [x] **2025-01-22 - Tool Orchestration Refactoring** - **COMPLETED**
+  - Umstrukturierung des Combined Analysis Agents zu Tool-Orchestrierung
+  - Verwendet bestehende Tools (`identify_relevant_json_fields`, `analyze_fields_with_rag_and_llm`)
+  - LangGraph orchestriert nur die Tool-Aufrufe, implementiert keine eigene Logik
+  - Deaktivierte alte separate MCP-Tools (`identify_relevant_json_fields`, `analyze_fields_with_rag_and_llm`)
+  - Nur noch ein aktives JSON-Analyse-Tool: `analyze_json_fields_with_rag`
+  - Saubere Trennung zwischen Tool-Orchestrierung und Tool-Implementierung
 
 ### 🔄 Current Issue
 - **OpenRouter API Key**: Appears to have expired (401 errors)
@@ -80,8 +95,11 @@
 ## Current Active Tasks
 - [ ] Test the field enhancement tool with JSON extraction results
 - [ ] Integration testing of the full workflow: extract → enhance
-- [ ] Update README.md with enhancement tool documentation
-- [ ] Create example workflow documentation
+- [x] Update README.md with hallucination-proof endpoint verification
+- [x] Implement Phase-2 endpoint verification in `reasoning_agent`
+- [x] Add unit test `tests/test_endpoint_verification.py`
+- [x] Implement Long-term Memory MCP Tool `persist_phase_learnings`
+- [x] Add unit test `tests/test_memory_tool.py`
 
 ## Available Tools for Testing
 1. **RAG System Tools**: `test_rag_system`, `upload_api_specification`, `query_api_specification`, etc.

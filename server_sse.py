@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Fast-loading MCP Server for Template with Schema Mapping and RAG Tools
-Uses lazy imports to reduce startup time
+Uses lazy imports to reduce startup time - SSE Transport Version
 """
 
 import asyncio
@@ -21,7 +21,7 @@ try:
     env_path = os.path.join(script_dir, '.env')
     load_dotenv(env_path)
     # Use logging instead of print statements to avoid JSON parsing issues
-    logger = logging.getLogger("template-mcp-fast")
+    logger = logging.getLogger("template-mcp-sse")
     logger.debug(f"Loading .env from: {env_path}")
     logger.debug(f"OPENROUTER_API_KEY loaded: {'Yes' if os.getenv('OPENROUTER_API_KEY') else 'No'}")
 except ImportError:
@@ -29,10 +29,10 @@ except ImportError:
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("template-mcp-fast")
+logger = logging.getLogger("template-mcp-sse")
 
 # Initialize MCP server
-mcp = FastMCP("Template MCP Server")
+mcp = FastMCP("Template MCP Server - SSE")
 
 # Global variables for lazy loading
 _json_extraction_tool = None
@@ -41,7 +41,6 @@ _rag_wrapper = None
 _coding_tool = None
 _api_spec_getter = None
 _reasoning_agent = None
-_memory_tool = None
 
 def get_json_extraction_tool():
     """Lazy import JSON extraction tool"""
@@ -83,14 +82,6 @@ def get_reasoning_agent():
         _reasoning_agent = reasoning_agent
     return _reasoning_agent
 
-def get_memory_tool():
-    """Lazy import memory tool"""
-    global _memory_tool
-    if _memory_tool is None:
-        from tools.memory_tool import persist_learnings
-        _memory_tool = persist_learnings
-    return _memory_tool
-
 # RAG Tools (lazy loaded)
 @mcp.tool()
 def test_rag_system() -> str:
@@ -109,22 +100,6 @@ def upload_api_specification(openapi_file_path: str, collection_name: str, metad
     """Upload a new OpenAPI specification file (.yml or .json) to the RAG system for analysis"""
     from tools.rag_tools import upload_openapi_spec_to_rag
     return upload_openapi_spec_to_rag(openapi_file_path, collection_name, metadata)
-
-@mcp.tool()
-def upload_learnings_document(file_path: str, collection_name: str = "cognitive_learnings", metadata: Optional[Dict[str, Any]] = None) -> str:
-    """Upload a curated learnings markdown/text file into a learnings collection with heading-aware chunks.
-
-    Args:
-        file_path: Absolute path to markdown/text file (e.g., `.cursor/rules/learninigs/IMPROVED_MAPPING_PROTOCOL.md`)
-        collection_name: Target collection (default: cognitive_learnings)
-        metadata: Optional metadata dict: {doc, section, phase, topics, severity, version, updated_at}
-    """
-    try:
-        from tools.rag_tools import get_rag_system
-        rag = get_rag_system()
-        return rag.upload_markdown(file_path, collection_name, metadata)
-    except Exception as e:
-        return f"❌ Learnings upload failed: {str(e)}"
 
 @mcp.tool()
 def query_api_specification(
@@ -176,33 +151,16 @@ def enhanced_rag_analysis(
     """
     try:
         from tools.rag_tools import analyze_fields_with_rag_and_llm as enhanced_analyze
-        
+    
         # Convert empty strings to None for backward compatibility
         context_topic_arg = context_topic if context_topic else None
         current_path_arg = current_path if current_path else None
-        
+    
         return enhanced_analyze(fields_to_analyze, collection_name, context_topic_arg, current_path_arg)
         
     except Exception as e:
         logger.error(f"Enhanced RAG analysis failed: {e}")
         return f"❌ Enhanced RAG analysis failed: {str(e)}"
-
-# @mcp.tool()
-# def analyze_fields_with_rag_and_llm(
-#     fields_to_analyze: List[str], 
-#     collection_name: str = "flip_api_v2", 
-#     context_topic: str = "",
-#     current_path: str = ""
-# ) -> str:
-#     """Analyze a list of fields against an API spec using LLM to synthesize findings. Optional current_path parameter to specify where to save analysis files"""
-#     from tools.rag_tools import analyze_fields_with_rag_and_llm as analyze_fields
-#     
-#     # Convert empty strings to None for backward compatibility
-#     context_topic_arg = context_topic if context_topic else None
-#     current_path_arg = current_path if current_path else None
-#     
-#     return analyze_fields(fields_to_analyze, collection_name, context_topic_arg, current_path_arg)
-
 
 # Enhanced Reasoning Agent with Integrated Proof Tool (lazy loaded) - ACTIVE
 @mcp.tool()
@@ -244,87 +202,6 @@ async def reasoning_agent(
     except Exception as e:
         logger.error(f"Enhanced reasoning agent failed: {e}")
         return f"❌ Enhanced reasoning agent failed: {str(e)}"
-
-@mcp.tool()
-def iterative_mapping_with_feedback(
-    source_fields: str,
-    target_collection: str,
-    api_spec_path: str,
-    output_path: str = ""
-) -> str:
-    """
-    Perform iterative field mapping with feedback loop using ReAct pattern.
-
-    This tool implements the ReAct (Think-Act-Observe) pattern for improved API field mapping.
-    It uses live API validation and iterative refinement to achieve better mapping results.
-
-    Args:
-        source_fields: Comma-separated list of source field names to map
-        target_collection: RAG collection name for target API
-        api_spec_path: Path to OpenAPI specification for live validation
-        output_path: Optional path to save detailed results (default: current directory)
-
-    Returns:
-        Detailed mapping results with confidence scores and iteration history
-    """
-    try:
-        # Parse source fields
-        fields_list = [field.strip() for field in source_fields.split(',') if field.strip()]
-
-        if not fields_list:
-            return "❌ No valid source fields provided"
-
-        # Set default output path if not provided
-        if not output_path:
-            output_path = "./mapping_results"
-
-        # Perform iterative mapping
-        result = iterative_field_mapping(
-            source_fields=fields_list,
-            target_collection=target_collection,
-            api_spec_path=api_spec_path,
-            output_path=output_path
-        )
-
-        return result
-
-    except Exception as e:
-        return f"❌ Iterative mapping failed: {str(e)}"
-
-@mcp.tool()
-def persist_phase_learnings(
-    phase2_report_path: str,
-    verification_file_path: str,
-    phase3_report_path: str,
-    phase3_verified: bool,
-    collection_name: str = "long_term_memory",
-    output_directory: str = "",
-    embed: bool = True,
-    memory_log_path: str = "",
-) -> str:
-    """
-    Persist concise learnings from Phase 2 and Phase 3 to long-term memory (RAG) if and only if verification gates pass.
-
-    Args:
-        phase2_report_path: Path to Phase 2 report (generated by reasoning_agent)
-        verification_file_path: Path to endpoints_to_research_*.md generated by reasoning_agent
-        phase3_report_path: Path to Phase 3 report (e.g., mapping code generation report)
-        phase3_verified: Whether Phase 3 is verified as correct
-        collection_name: RAG collection to store learnings (default: long_term_memory)
-        output_directory: Where to write consolidated learnings
-        embed: Set False to skip embeddings (useful for tests)
-    """
-    tool = get_memory_tool()
-    return tool(
-        phase2_report_path=phase2_report_path,
-        verification_file_path=verification_file_path,
-        phase3_report_path=phase3_report_path,
-        phase3_verified=phase3_verified,
-        collection_name=collection_name,
-        output_directory=output_directory,
-        embed=embed,
-        memory_log_path=memory_log_path,
-    )
 
 # Combined JSON Analysis Tool (lazy loaded) - ACTIVE
 @mcp.tool()
@@ -477,45 +354,11 @@ def generate_kotlin_mapping_code(mapping_report_path: str) -> str:
         logger.error(f"Failed to generate Kotlin mapping prompt: {e}")
         return f"❌ Failed to generate prompt: {str(e)}"
 
-# Proof Tool (INTEGRATED INTO REASONING AGENT - DEACTIVATED)
-# @mcp.tool()
-# async def generate_proof_prompt(
-#     mapping_report_path: str,
-#     api_spec_path: str,
-#     current_path: str = "",
-#     collection_name: str = "flip_api_v2"
-# ) -> str:
-#     """
-#     ⚠️  DEPRECATED: This tool has been integrated into the reasoning_agent tool.
-#     
-#     Generate a comprehensive proof prompt for Cursor to double-check field mappings
-#     and provide creative solutions for unmapped fields.
-#     
-#     This tool analyzes existing mapping reports, identifies unmapped fields,
-#     searches the API specification for missed opportunities, and generates
-#     creative solutions for handling unmapped fields. The output is a detailed
-#     prompt that can be used in Cursor to perform thorough verification and
-#     implementation of field mappings.
-#     
-#     Please use the reasoning_agent tool instead for complete functionality.
-#     
-#     Args:
-#         mapping_report_path: Path to the mapping analysis report
-#         api_spec_path: Path to the OpenAPI specification
-#         current_path: Current working directory path (defaults to "reports")
-#         collection_name: RAG collection name for API spec (defaults to "flip_api_v2")
-#     
-#     Returns:
-#         Comprehensive prompt string for Cursor with verification tasks and creative solutions
-#     """
-#     return "⚠️ This tool has been integrated into the reasoning_agent tool. Please use reasoning_agent instead."
-
 # Import the new iterative mapping tool
 from tools.iterative_mapping import iterative_field_mapping
 
-'''
 @mcp.tool()
-async def iterative_mapping_with_feedback(
+def iterative_mapping_with_feedback(
     source_fields: str,
     target_collection: str,
     api_spec_path: str,
@@ -523,47 +366,37 @@ async def iterative_mapping_with_feedback(
 ) -> str:
     """
     Perform iterative field mapping with feedback loop using ReAct pattern.
-    
-    This tool implements the ReAct (Think-Act-Observe) pattern for improved API field mapping.
-    It uses live API validation and iterative refinement to achieve better mapping results.
-    
+
     Args:
         source_fields: Comma-separated list of source field names to map
         target_collection: RAG collection name for target API
         api_spec_path: Path to OpenAPI specification for live validation
         output_path: Optional path to save detailed results (default: current directory)
-    
+
     Returns:
         Detailed mapping results with confidence scores and iteration history
     """
     try:
-        # Parse source fields
         fields_list = [field.strip() for field in source_fields.split(',') if field.strip()]
-        
         if not fields_list:
             return "❌ No valid source fields provided"
-        
-        # Set default output path if not provided
+
         if not output_path:
             output_path = "./mapping_results"
-        
-        # Perform iterative mapping
+
         result = iterative_field_mapping(
             source_fields=fields_list,
             target_collection=target_collection,
             api_spec_path=api_spec_path,
             output_path=output_path
         )
-        
         return result
-        
     except Exception as e:
         return f"❌ Iterative mapping failed: {str(e)}"
-'''
 if __name__ == "__main__":
-    logger.info("🚀 Starting Template MCP Server with Optimized RAG Tools...")
-    # logger.info("📡 Server will be available via SSE transport on port 8080")
-    # logger.info("🌐 Use ngrok to expose: ngrok http 8080")
+    logger.info("🚀 Starting Template MCP Server with Optimized RAG Tools (SSE)...")
+    logger.info("📡 Server will be available via SSE transport on port 8080")
+    logger.info("🌐 Use ngrok to expose: ngrok http 8080")
     logger.info("🔧 Available tools:")
     logger.info("   • test_rag_system() - Test optimized RAG system")
     logger.info("   • upload_api_specification() - Upload with enhanced chunking")
@@ -574,6 +407,6 @@ if __name__ == "__main__":
     logger.info("   • get_direct_api_mapping_prompt() - Direct API analysis")
     logger.info("   • generate_kotlin_mapping_code() - Kotlin code generation")
     logger.info("   • iterative_mapping_with_feedback() - Iterative ReAct mapping")
-    #mcp.run(transport="sse", port=8080) 
-    # Run with stdio transport for MCP compatibility
-    mcp.run()
+    
+    # Run with SSE transport for web compatibility
+    mcp.run(transport="sse", port=8080)

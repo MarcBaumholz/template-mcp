@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 # Set a reasonable character limit to avoid overflowing the context window
 # 500,000 chars is roughly 100k-125k tokens, which fits in most modern models with large context windows.
-CONTEXT_WINDOW_CHAR_LIMIT = 500000
+CONTEXT_WINDOW_CHAR_LIMIT = 800000
 
 def get_api_spec_with_direct_llm_query(
     api_spec_path: str, 
@@ -118,3 +118,8 @@ Produce a clear, structured markdown report that presents the final mapping for 
     except Exception as e:
         logger.error(f"Failed to generate direct API query prompt: {e}")
         return f"❌ Failed to generate prompt: {str(e)}" 
+
+
+def get_direct_api_mapping_prompt(api_spec_path: str, analysis_md_path: str) -> str:
+    """Backward compatibility wrapper. Calls get_api_spec_with_direct_llm_query."""
+    return get_api_spec_with_direct_llm_query(api_spec_path, analysis_md_path) 

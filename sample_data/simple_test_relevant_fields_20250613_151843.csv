@@ -1,2 +1,0 @@
-user_profile.user_id,user_profile.email,user_profile.is_active,user_profile.last_login
-usr_abcde,test@example.com,True,2024-05-20T10:00:00Z
