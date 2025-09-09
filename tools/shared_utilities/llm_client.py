@@ -59,8 +59,10 @@ def get_llm_response(prompt: str, model: str = None, max_tokens: int = 2000, too
     if not OPENAI_AVAILABLE:
         return "Error: OpenAI library not available. Please install it with `pip install openai`."
 
-    # Use the new API key
-    api_key = "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"
+    # Get API key from environment variables
+    api_key = os.getenv('OPENROUTER_API_KEY')
+    if not api_key:
+        return "Error: OPENROUTER_API_KEY environment variable not set. Please set it in your .env file."
     
     if not model:
         model = os.getenv('OPENROUTER_MODEL', 'deepseek/deepseek-chat')
