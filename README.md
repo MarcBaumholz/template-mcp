@@ -1,4 +1,4 @@
-# 🚀 Template MCP Server - Optimized HR API Mapping
+# 🚀 Connector MCP Server - Optimized HR API Mapping
 
 ## 📋 Übersicht
 
@@ -15,14 +15,14 @@ Ein hochoptimierter MCP Server für semantische API-Mapping mit erweiterten RAG-
 ## 🏗️ Projektstruktur
 
 ```
-template-mcp/
+connector-mcp/
 ├── server_fast.py              # 🚀 Hauptserver (SSE + Ngrok ready)
 ├── README.md                   # 📖 Diese Dokumentation
 ├── test_optimized_server.py    # 🧪 Kompletter Systemtest
 ├── mcp_client_config.json      # ⚙️ MCP Client Konfiguration
 ├── requirements.txt            # 📦 Dependencies
 ├── .env                        # 🔐 Environment Variables
-├── .env.example               # 📝 Environment Template
+├── .env.example               # 📝 Environment Configuration Template
 ├── tools/                      # 🛠️ Aktive Tools
 │   ├── rag_tools.py           # 🧠 Optimierte RAG Engine
 │   ├── reasoning_agent.py     # 🤖 Mapping Orchestrator
@@ -46,7 +46,7 @@ template-mcp/
 
 ### 1. Dependencies installieren
    ```bash
-cd mcp-personal-server-py/template-mcp
+cd mcp-personal-server-py/connector-mcp
 source venv/bin/activate
    pip install -r requirements.txt
    ```

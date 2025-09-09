@@ -163,7 +163,7 @@ def main():
     if all_passed:
         print("\n🎉 ALL TESTS PASSED! Server is ready to run.")
         print("\n🚀 To start the server:")
-        print("   cd mcp-personal-server-py/template-mcp")
+        print("   cd mcp-personal-server-py/connector-mcp")
         print("   source venv/bin/activate")
         print("   python server_fast.py")
         print("\n🌐 For public access:")

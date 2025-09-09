@@ -1,5 +1,5 @@
 """
-JSON processing tools for Template MCP Server
+JSON processing tools for Connector MCP Server
 """
 
 import json

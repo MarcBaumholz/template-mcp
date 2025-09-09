@@ -1,30 +1,30 @@
 """
-Clean Tools Package for MCP Template Server
+Clean Tools Package for MCP Connector Server
 
-This package contains only the active, non-duplicate tools for HR API mapping:
+This package contains the new phase-based organized tools for HR API mapping:
 
-ACTIVE TOOLS:
-- reasoning_agent: Main orchestrator with integrated proof tool functionality
-- json_tool/: JSON field extraction and analysis
-- codingtool/: Kotlin code generation
-- rag_tools: RAG system for API specification analysis
-- api_spec_getter: Direct API spec analysis for small specs
-- llm_client: LLM communication utilities
-- rag_helper: RAG system helper functions
+ACTIVE TOOLS (Phase-based organization):
+- shared_utilities/: Common utilities used across all phases
+- phase1_data_extraction/: Data extraction and API spec management
+- phase2_analysis_mapping/: Analysis, mapping, and verification
+- phase3_code_generation/: Code generation and testing
 
-ARCHIVED TOOLS (moved to _archive/):
-- All duplicate and legacy mapping tools
-- Old multi-agent system components
-- Deprecated proof tool (now integrated into reasoning_agent)
+ARCHIVED TOOLS (moved to _archive/_archive/):
+- All old individual tool files (api_spec_getter.py, rag_tools.py, etc.)
+- Old directory structures (json_tool/, codingtool/, phase3/, etc.)
+- Legacy tools and duplicate implementations
 
-UNUSED TOOLS (moved to _unused/):
+UNUSED TOOLS (moved to _archive/_unused/):
 - Tools that are referenced but not actively used
+- Enhancement tools and deprecated components
 """
 
-# Only import what's actually needed
-from .json_tool import CombinedFieldAnalysisAgent, FieldExtractionAgent
+# Import from the new phase-based structure
+from .shared_utilities.copy_rules_to_working_directory import copy_rules_to_working_directory, get_rules_source_info
+from .phase1_data_extraction.analyze_json_fields_with_rag import CombinedFieldAnalysisAgent
 
 __all__ = [
     "CombinedFieldAnalysisAgent",
-    "FieldExtractionAgent"
+    "copy_rules_to_working_directory",
+    "get_rules_source_info"
 ]

@@ -1,9 +1,0 @@
-{
-  "context_topic": "A user profile update event",
-  "relevant_fields": [
-    "user_id",
-    "email",
-    "is_active",
-    "last_login"
-  ]
-}

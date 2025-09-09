@@ -188,7 +188,7 @@
 1. **Updated Qdrant Cloud Credentials** - Migrated to new cluster
    - New API key: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.S0yipF6Jov3Z24MrXQXlQhnsPSztS7Fl28xvaIr0kLw`
    - New URL: `https://a8e2395f-699e-4c5a-8301-f7400339c1fd.eu-central-1-0.aws.cloud.qdrant.io:6333`
-   - Updated both `.env` files (main directory and template-mcp directory)
+   - Updated both `.env` files (main directory and connector-mcp directory)
 
 2. **Fixed RAG System Bug** - Resolved exception handling issue
    - Fixed broken try-except block in `create_collection` method
