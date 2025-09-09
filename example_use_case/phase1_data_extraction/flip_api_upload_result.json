@@ -1,0 +1,56 @@
+{
+  "success": true,
+  "timestamp": "2024-12-08T14:30:25Z",
+  "collection_name": "flip_hris_v1",
+  "upload_details": {
+    "file_path": "/example_use_case/sample_data/flip_hris_api_spec.yml",
+    "file_size": "25.6KB",
+    "file_type": "yaml",
+    "processing_time": "3.2s"
+  },
+  "chunking_results": {
+    "total_chunks": 180,
+    "chunk_size": 512,
+    "overlap": 50,
+    "chunking_strategy": "semantic_boundary"
+  },
+  "indexing_results": {
+    "documents_indexed": 45,
+    "embeddings_generated": 180,
+    "index_time": "2.1s",
+    "index_status": "completed"
+  },
+  "validation_results": {
+    "openapi_valid": true,
+    "endpoints_found": 8,
+    "schemas_found": 12,
+    "security_schemes": 1
+  },
+  "endpoints_extracted": [
+    {
+      "path": "/absences",
+      "methods": ["GET", "POST"],
+      "summary": "List and create employee absences"
+    },
+    {
+      "path": "/absences/{absenceId}",
+      "methods": ["GET", "PUT", "DELETE"],
+      "summary": "Manage specific absence by ID"
+    }
+  ],
+  "schemas_extracted": [
+    "AbsenceResponse",
+    "CreateAbsenceRequest",
+    "UpdateAbsenceRequest",
+    "Employee",
+    "Duration",
+    "PaginationInfo",
+    "ResponseMetadata"
+  ],
+  "metadata": {
+    "api_title": "Flip HRIS Absence Management API",
+    "api_version": "1.0.0",
+    "api_description": "API for managing employee absences in Flip HRIS system",
+    "contact_email": "api-support@flip.com"
+  }
+}

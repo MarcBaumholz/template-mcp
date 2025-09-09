@@ -1,0 +1,659 @@
+{
+  "fields": [
+    "duration.value",
+    "employeeId",
+    "createdAt",
+    "id",
+    "endDate",
+    "duration.unit",
+    "startDate",
+    "type",
+    "duration",
+    "updatedAt",
+    "status"
+  ],
+  "descriptions": {
+    "duration.value": {
+      "semantic_description": "Numerical length of time period",
+      "use_case": "Calculate payroll or track time off"
+    },
+    "employeeId": {
+      "semantic_description": "Unique identifier for an employee",
+      "use_case": "Link absence records to specific employees"
+    },
+    "createdAt": {
+      "semantic_description": "Timestamp when record was initially created",
+      "use_case": "Audit trail and chronological tracking"
+    },
+    "id": {
+      "semantic_description": "Unique identifier for the absence record",
+      "use_case": "Primary key for absence management"
+    },
+    "endDate": {
+      "semantic_description": "Date when the absence period concludes",
+      "use_case": "Determine return-to-work date"
+    },
+    "duration.unit": {
+      "semantic_description": "Time unit for duration measurement",
+      "use_case": "Standardize time calculations"
+    },
+    "startDate": {
+      "semantic_description": "Date when the absence period begins",
+      "use_case": "Schedule coverage and plan workloads"
+    },
+    "type": {
+      "semantic_description": "Category or reason for the absence",
+      "use_case": "Track different leave types"
+    },
+    "duration": {
+      "semantic_description": "Complete time period specification",
+      "use_case": "Quick overview of absence length"
+    },
+    "updatedAt": {
+      "semantic_description": "Timestamp when record was last modified",
+      "use_case": "Track changes and updates"
+    },
+    "status": {
+      "semantic_description": "Current approval state of the absence",
+      "use_case": "Workflow management and reporting"
+    }
+  },
+  "evidence": {
+    "duration.value": [
+      {
+        "text": "Properties for GetHrisAbsenceTypesSuccessfulResponseDataResultsInner:\n• id (string)\n• name (string)\n• unit (string) - values: HOURS, DAYS\n• half_days_supported (boolean)\n• exact_times_supported (boolean)\n• remote_id (string)\n• remote_data (string)\n• changed_at (string)\n• remote_deleted_at (string)",
+        "score": 0.4330506,
+        "semantic_score": 0.4330506,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponseDataResultsInner",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Properties for AbsenceCreation:\n• employee_external_id\n• absence_type_external_id\n• status (string) - values: REQUESTED, APPROVED\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• amount (number)\n• unit (string) - values: DAYS\n• employee_note (string)",
+        "score": 0.40082967,
+        "semantic_score": 0.40082967,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "AbsenceCreation",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Schema: Absence\nType: object\nRequired Fields: external_id, start_date, end_date, start_half_day, end_half_day, status, duration, type, created_at, updated_at, is_cancellable, is_deletable",
+        "score": 0.39434153,
+        "semantic_score": 0.39434153,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absence"
+        }
+      },
+      {
+        "text": "Properties for GetHrisAbsenceTypesSuccessfulResponse:\n• status (string) - values: SUCCESS\n• data",
+        "score": 0.3940736,
+        "semantic_score": 0.3940736,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponse",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Parameters for GET /api/hris/v4/absences:\n• unnamed\n• unnamed\n• unnamed\n• x-auth-email (in: header) - Used for identifying the employee\n• sort (in: query) - type: array\n• date_from (in: query) - REQUIRED - type: string - Specifies the begin (inclusive) of the time range from which absences are queried.\nFormat: Date in YYYY-MM-DD format.\nTime zone: To standardize time zone handling this parameter has to be in UTC.\nRestriction: This parameter must not specify a date that is more than 2 years in the past from the current date. This ensures data relevance and optimizes performance by limiting the amount of historical data retrieved.\nExample: If today's date is 2024-04-23, the earliest permissible value for date_from would be 2021-04-23.\n• date_until (in: query) - REQUIRED - type: string - Specifies the end (inclusive) of the time range from which absences are queried.\nFormat: Date in YYYY-MM-DD format.\nTime zone: To standardize time zone handling this parameter has to be in UTC.\nRestriction: The date must not be more than 2 years in the future from the current date to ensure data relevance and optimize performance.",
+        "score": 0.39005965,
+        "semantic_score": 0.39005965,
+        "chunk_type": "operation_parameters",
+        "metadata": {
+          "type": "operation_parameters",
+          "path": "/api/hris/v4/absences",
+          "method": "get"
+        }
+      }
+    ],
+    "employeeId": [
+      {
+        "text": "Schema: AbsenceType\nType: object\nDescription: Represents a type of absence with additional configuration\nsupport which an employee can then consume.\nRequired Fields: external_id, name, unit, half_days_supported, exact_times_supported, created_at, updated_at",
+        "score": 0.5047505,
+        "semantic_score": 0.5047505,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceType"
+        }
+      },
+      {
+        "text": "Properties for PostHrisAbsencesSuccessfulResponseData:\n• id (string)\n• remote_id (string)\n• employee_id (string)\n• approver_id (string)\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• start_time (string)\n• end_time (string)\n• amount (number)\n• unit (string) - values: HOURS, DAYS\n• status (string)\n• employee_note (string)\n• type_id (string)\n• changed_at (string)\n• remote_deleted_at (string)\n• remote_data (string)",
+        "score": 0.5030719,
+        "semantic_score": 0.5030719,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "PostHrisAbsencesSuccessfulResponseData",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Properties for AbsenceCreation:\n• employee_external_id\n• absence_type_external_id\n• status (string) - values: REQUESTED, APPROVED\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• amount (number)\n• unit (string) - values: DAYS\n• employee_note (string)",
+        "score": 0.48362303,
+        "semantic_score": 0.48362303,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "AbsenceCreation",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Schema: GetHrisAbsenceTypesSuccessfulResponse\nType: object",
+        "score": 0.47426218,
+        "semantic_score": 0.47426218,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponse"
+        }
+      },
+      {
+        "text": "Schema: AbsenceStatus\nType: object\nRequired Fields: mapped, raw",
+        "score": 0.4434874,
+        "semantic_score": 0.4434874,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceStatus"
+        }
+      }
+    ],
+    "createdAt": [
+      {
+        "text": "Schema: AbsenceDurationUnit\nType: string",
+        "score": 0.5729883,
+        "semantic_score": 0.5729883,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceDurationUnit"
+        }
+      },
+      {
+        "text": "Schema: Absences\nType: object",
+        "score": 0.5463893,
+        "semantic_score": 0.5463893,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absences"
+        }
+      },
+      {
+        "text": "Schema: CreateAbsencesErrorCode\nType: string",
+        "score": 0.53795534,
+        "semantic_score": 0.53795534,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "CreateAbsencesErrorCode"
+        }
+      },
+      {
+        "text": "Schema: AbsenceStatus\nType: object\nRequired Fields: mapped, raw",
+        "score": 0.48534378,
+        "semantic_score": 0.48534378,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceStatus"
+        }
+      },
+      {
+        "text": "Schema: GetHrisAbsenceTypesSuccessfulResponse\nType: object",
+        "score": 0.45344645,
+        "semantic_score": 0.45344645,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponse"
+        }
+      }
+    ],
+    "id": [
+      {
+        "text": "Schema: AbsenceDurationUnit\nType: string",
+        "score": 0.58856046,
+        "semantic_score": 0.58856046,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceDurationUnit"
+        }
+      },
+      {
+        "text": "Schema: AbsenceCreation\nType: object",
+        "score": 0.5505291,
+        "semantic_score": 0.5505291,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceCreation"
+        }
+      },
+      {
+        "text": "Schema: AbsenceStatus\nType: object\nRequired Fields: mapped, raw",
+        "score": 0.4647805,
+        "semantic_score": 0.4647805,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceStatus"
+        }
+      },
+      {
+        "text": "Parameters for DELETE /api/hris/v4/absences/{id}:\n• id (in: path) - REQUIRED - type: string",
+        "score": 0.45842725,
+        "semantic_score": 0.45842725,
+        "chunk_type": "operation_parameters",
+        "metadata": {
+          "type": "operation_parameters",
+          "path": "/api/hris/v4/absences/{id}",
+          "method": "delete"
+        }
+      },
+      {
+        "text": "Schema: GetAbsencesErrorCode\nType: string",
+        "score": 0.4491259,
+        "semantic_score": 0.4491259,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "GetAbsencesErrorCode"
+        }
+      }
+    ],
+    "endDate": [
+      {
+        "text": "Properties for Absence:\n• external_id\n• approver_external_id\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• start_time (string)\n• end_time (string)\n• duration (object): defines the duration of the absence\n• status\n• is_cancellable (boolean)\n• is_deletable (boolean)\n• requestor_comment (string)\n• type\n• created_at\n• updated_at",
+        "score": 0.5419034,
+        "semantic_score": 0.5419034,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "Absence",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Schema: AbsenceDurationUnit\nType: string",
+        "score": 0.534294,
+        "semantic_score": 0.534294,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceDurationUnit"
+        }
+      },
+      {
+        "text": "Schema: Absence\nType: object\nRequired Fields: external_id, start_date, end_date, start_half_day, end_half_day, status, duration, type, created_at, updated_at, is_cancellable, is_deletable",
+        "score": 0.4994729,
+        "semantic_score": 0.4994729,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absence"
+        }
+      },
+      {
+        "text": "Schema: AbsenceStatus\nType: object\nRequired Fields: mapped, raw",
+        "score": 0.44493014,
+        "semantic_score": 0.44493014,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceStatus"
+        }
+      },
+      {
+        "text": "Properties for GetHrisAbsenceTypesSuccessfulResponseDataResultsInner:\n• id (string)\n• name (string)\n• unit (string) - values: HOURS, DAYS\n• half_days_supported (boolean)\n• exact_times_supported (boolean)\n• remote_id (string)\n• remote_data (string)\n• changed_at (string)\n• remote_deleted_at (string)",
+        "score": 0.440601,
+        "semantic_score": 0.440601,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponseDataResultsInner",
+          "chunk_index": null
+        }
+      }
+    ],
+    "duration.unit": [
+      {
+        "text": "Properties for GetHrisAbsenceTypesSuccessfulResponseDataResultsInner:\n• id (string)\n• name (string)\n• unit (string) - values: HOURS, DAYS\n• half_days_supported (boolean)\n• exact_times_supported (boolean)\n• remote_id (string)\n• remote_data (string)\n• changed_at (string)\n• remote_deleted_at (string)",
+        "score": 0.44593272,
+        "semantic_score": 0.44593272,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponseDataResultsInner",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Schema: AbsenceStatus\nType: object\nRequired Fields: mapped, raw",
+        "score": 0.40857804,
+        "semantic_score": 0.40857804,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceStatus"
+        }
+      },
+      {
+        "text": "Schema: Absence\nType: object\nRequired Fields: external_id, start_date, end_date, start_half_day, end_half_day, status, duration, type, created_at, updated_at, is_cancellable, is_deletable",
+        "score": 0.3939454,
+        "semantic_score": 0.3939454,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absence"
+        }
+      },
+      {
+        "text": "Properties for PostHrisAbsencesSuccessfulResponseData:\n• id (string)\n• remote_id (string)\n• employee_id (string)\n• approver_id (string)\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• start_time (string)\n• end_time (string)\n• amount (number)\n• unit (string) - values: HOURS, DAYS\n• status (string)\n• employee_note (string)\n• type_id (string)\n• changed_at (string)\n• remote_deleted_at (string)\n• remote_data (string)",
+        "score": 0.39208874,
+        "semantic_score": 0.39208874,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "PostHrisAbsencesSuccessfulResponseData",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Properties for AbsenceCreation:\n• employee_external_id\n• absence_type_external_id\n• status (string) - values: REQUESTED, APPROVED\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• amount (number)\n• unit (string) - values: DAYS\n• employee_note (string)",
+        "score": 0.38877574,
+        "semantic_score": 0.38877574,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "AbsenceCreation",
+          "chunk_index": null
+        }
+      }
+    ],
+    "startDate": [
+      {
+        "text": "Properties for Absence:\n• external_id\n• approver_external_id\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• start_time (string)\n• end_time (string)\n• duration (object): defines the duration of the absence\n• status\n• is_cancellable (boolean)\n• is_deletable (boolean)\n• requestor_comment (string)\n• type\n• created_at\n• updated_at",
+        "score": 0.5344062,
+        "semantic_score": 0.5344062,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "Absence",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Schema: AbsenceDurationUnit\nType: string",
+        "score": 0.5312818,
+        "semantic_score": 0.5312818,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceDurationUnit"
+        }
+      },
+      {
+        "text": "Schema: Absence\nType: object\nRequired Fields: external_id, start_date, end_date, start_half_day, end_half_day, status, duration, type, created_at, updated_at, is_cancellable, is_deletable",
+        "score": 0.48362428,
+        "semantic_score": 0.48362428,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absence"
+        }
+      },
+      {
+        "text": "Schema: AbsenceStatus\nType: object\nRequired Fields: mapped, raw",
+        "score": 0.44591212,
+        "semantic_score": 0.44591212,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceStatus"
+        }
+      },
+      {
+        "text": "Properties for GetHrisAbsenceTypesSuccessfulResponseDataResultsInner:\n• id (string)\n• name (string)\n• unit (string) - values: HOURS, DAYS\n• half_days_supported (boolean)\n• exact_times_supported (boolean)\n• remote_id (string)\n• remote_data (string)\n• changed_at (string)\n• remote_deleted_at (string)",
+        "score": 0.42165715,
+        "semantic_score": 0.42165715,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponseDataResultsInner",
+          "chunk_index": null
+        }
+      }
+    ],
+    "type": [
+      {
+        "text": "Schema: Absences\nType: object",
+        "score": 0.6785144,
+        "semantic_score": 0.6785144,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absences"
+        }
+      },
+      {
+        "text": "Schema: AbsenceDurationUnit\nType: string",
+        "score": 0.6142882,
+        "semantic_score": 0.6142882,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceDurationUnit"
+        }
+      },
+      {
+        "text": "Schema: AbsenceCreation\nType: object",
+        "score": 0.6124339,
+        "semantic_score": 0.6124339,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceCreation"
+        }
+      },
+      {
+        "text": "Schema: GetHrisAbsenceTypesSuccessfulResponseData\nType: object",
+        "score": 0.54454243,
+        "semantic_score": 0.54454243,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponseData"
+        }
+      },
+      {
+        "text": "Schema: GetHrisAbsenceTypesSuccessfulResponse\nType: object",
+        "score": 0.543146,
+        "semantic_score": 0.543146,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponse"
+        }
+      }
+    ],
+    "duration": [
+      {
+        "text": "Properties for GetHrisAbsenceTypesSuccessfulResponseDataResultsInner:\n• id (string)\n• name (string)\n• unit (string) - values: HOURS, DAYS\n• half_days_supported (boolean)\n• exact_times_supported (boolean)\n• remote_id (string)\n• remote_data (string)\n• changed_at (string)\n• remote_deleted_at (string)",
+        "score": 0.43008864,
+        "semantic_score": 0.43008864,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponseDataResultsInner",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Parameters for GET /api/hris/v4/absences:\n• unnamed\n• unnamed\n• unnamed\n• x-auth-email (in: header) - Used for identifying the employee\n• sort (in: query) - type: array\n• date_from (in: query) - REQUIRED - type: string - Specifies the begin (inclusive) of the time range from which absences are queried.\nFormat: Date in YYYY-MM-DD format.\nTime zone: To standardize time zone handling this parameter has to be in UTC.\nRestriction: This parameter must not specify a date that is more than 2 years in the past from the current date. This ensures data relevance and optimizes performance by limiting the amount of historical data retrieved.\nExample: If today's date is 2024-04-23, the earliest permissible value for date_from would be 2021-04-23.\n• date_until (in: query) - REQUIRED - type: string - Specifies the end (inclusive) of the time range from which absences are queried.\nFormat: Date in YYYY-MM-DD format.\nTime zone: To standardize time zone handling this parameter has to be in UTC.\nRestriction: The date must not be more than 2 years in the future from the current date to ensure data relevance and optimize performance.",
+        "score": 0.42473167,
+        "semantic_score": 0.42473167,
+        "chunk_type": "operation_parameters",
+        "metadata": {
+          "type": "operation_parameters",
+          "path": "/api/hris/v4/absences",
+          "method": "get"
+        }
+      },
+      {
+        "text": "Schema: AbsenceType\nType: object\nDescription: Represents a type of absence with additional configuration\nsupport which an employee can then consume.\nRequired Fields: external_id, name, unit, half_days_supported, exact_times_supported, created_at, updated_at",
+        "score": 0.41566938,
+        "semantic_score": 0.41566938,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceType"
+        }
+      },
+      {
+        "text": "Schema: Absence\nType: object\nRequired Fields: external_id, start_date, end_date, start_half_day, end_half_day, status, duration, type, created_at, updated_at, is_cancellable, is_deletable",
+        "score": 0.41154024,
+        "semantic_score": 0.41154024,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absence"
+        }
+      },
+      {
+        "text": "Properties for Absence:\n• external_id\n• approver_external_id\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• start_time (string)\n• end_time (string)\n• duration (object): defines the duration of the absence\n• status\n• is_cancellable (boolean)\n• is_deletable (boolean)\n• requestor_comment (string)\n• type\n• created_at\n• updated_at",
+        "score": 0.40552905,
+        "semantic_score": 0.40552905,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "Absence",
+          "chunk_index": null
+        }
+      }
+    ],
+    "updatedAt": [
+      {
+        "text": "Schema: AbsenceStatus\nType: object\nRequired Fields: mapped, raw",
+        "score": 0.5297654,
+        "semantic_score": 0.5297654,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceStatus"
+        }
+      },
+      {
+        "text": "Schema: Absences\nType: object",
+        "score": 0.49072686,
+        "semantic_score": 0.49072686,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absences"
+        }
+      },
+      {
+        "text": "Schema: AbsenceCreation\nType: object",
+        "score": 0.46241376,
+        "semantic_score": 0.46241376,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceCreation"
+        }
+      },
+      {
+        "text": "Schema: AbsenceDurationUnit\nType: string",
+        "score": 0.43753296,
+        "semantic_score": 0.43753296,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceDurationUnit"
+        }
+      },
+      {
+        "text": "Request Body for POST /api/hris/v4/absences:\n- REQUIRED\n• Content-Type: application/json - schema: #/components/schemas/AbsenceCreation",
+        "score": 0.42032427,
+        "semantic_score": 0.42032427,
+        "chunk_type": "operation_request_body",
+        "metadata": {
+          "type": "operation_request_body",
+          "path": "/api/hris/v4/absences",
+          "method": "post"
+        }
+      }
+    ],
+    "status": [
+      {
+        "text": "Schema: AbsenceDurationUnit\nType: string",
+        "score": 0.61938554,
+        "semantic_score": 0.61938554,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceDurationUnit"
+        }
+      },
+      {
+        "text": "Properties for AbsenceStatus:\n• raw (string): contains the value of the external system if it cannot be mapped because it is unknown.\n• mapped (string): defines the type of the status. - values: REQUESTED, PENDING, APPROVED",
+        "score": 0.5817143,
+        "semantic_score": 0.5817143,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "AbsenceStatus",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Properties for GetHrisAbsenceTypesSuccessfulResponse:\n• status (string) - values: SUCCESS\n• data",
+        "score": 0.5599445,
+        "semantic_score": 0.5599445,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponse",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Schema: AbsenceType\nType: object\nDescription: Represents a type of absence with additional configuration\nsupport which an employee can then consume.\nRequired Fields: external_id, name, unit, half_days_supported, exact_times_supported, created_at, updated_at",
+        "score": 0.5269739,
+        "semantic_score": 0.5269739,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceType"
+        }
+      },
+      {
+        "text": "Schema: Absences\nType: object",
+        "score": 0.5245118,
+        "semantic_score": 0.5245118,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absences"
+        }
+      }
+    ]
+  },
+  "processing_context": "HR field analysis",
+  "enhancement_confidence": 0.485,
+  "total_fields_identified": 11,
+  "field_extraction_validation": "Missing data array fields: ['duration']"
+}

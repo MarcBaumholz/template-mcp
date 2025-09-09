@@ -1,0 +1,62 @@
+{
+  "success": true,
+  "timestamp": "2024-12-08T14:30:28Z",
+  "collection_name": "stackone_v2",
+  "upload_details": {
+    "file_path": "/example_use_case/sample_data/stackone_api_spec.json",
+    "file_size": "32.1KB",
+    "file_type": "json",
+    "processing_time": "2.8s"
+  },
+  "chunking_results": {
+    "total_chunks": 152,
+    "chunk_size": 512,
+    "overlap": 50,
+    "chunking_strategy": "semantic_boundary"
+  },
+  "indexing_results": {
+    "documents_indexed": 38,
+    "embeddings_generated": 152,
+    "index_time": "1.9s",
+    "index_status": "completed"
+  },
+  "validation_results": {
+    "openapi_valid": true,
+    "endpoints_found": 6,
+    "schemas_found": 10,
+    "security_schemes": 1
+  },
+  "endpoints_extracted": [
+    {
+      "path": "/timeOffEntries",
+      "methods": ["GET", "POST"],
+      "summary": "List and create time-off entries"
+    },
+    {
+      "path": "/timeOffEntries/{entryId}",
+      "methods": ["GET", "PUT", "DELETE"],
+      "summary": "Manage specific time-off entry by ID"
+    },
+    {
+      "path": "/timeOffTypes",
+      "methods": ["GET"],
+      "summary": "List available time-off types"
+    }
+  ],
+  "schemas_extracted": [
+    "TimeOffEntryResponse",
+    "CreateTimeOffEntryRequest",
+    "UpdateTimeOffEntryRequest",
+    "EmployeeInfo",
+    "TimeOffDuration",
+    "PaginationInfo",
+    "ResponseMeta",
+    "TimeOffType"
+  ],
+  "metadata": {
+    "api_title": "StackOne Time-off Management API",
+    "api_version": "2.1.0",
+    "api_description": "API for managing employee time-off requests in StackOne system",
+    "contact_email": "support@stackone.com"
+  }
+}

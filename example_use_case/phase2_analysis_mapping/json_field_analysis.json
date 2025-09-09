@@ -1,0 +1,260 @@
+{
+  "success": true,
+  "timestamp": "2024-12-08T14:30:45Z",
+  "source_file": "flip_absence_webhook.json",
+  "analysis_summary": {
+    "total_fields_identified": 15,
+    "nested_objects_found": 3,
+    "arrays_found": 1,
+    "pagination_fields": 4,
+    "metadata_fields": 3
+  },
+  "extracted_fields": [
+    {
+      "field_path": "data[].id",
+      "field_name": "id",
+      "data_type": "string",
+      "example_value": "abs_12345",
+      "description": "Unique identifier for the absence record",
+      "business_context": "Primary key for absence tracking",
+      "semantic_meaning": "Absence identifier",
+      "synonyms": ["absenceId", "recordId", "entryId"],
+      "priority": 5,
+      "is_required": true
+    },
+    {
+      "field_path": "data[].employeeId",
+      "field_name": "employeeId",
+      "data_type": "string",
+      "example_value": "emp_67890",
+      "description": "Identifier of the employee requesting absence",
+      "business_context": "Employee reference for absence association",
+      "semantic_meaning": "Employee identifier",
+      "synonyms": ["empId", "userId", "personId"],
+      "priority": 5,
+      "is_required": true
+    },
+    {
+      "field_path": "data[].employee.id",
+      "field_name": "employee.id",
+      "data_type": "string",
+      "example_value": "emp_67890",
+      "description": "Employee's unique identifier",
+      "business_context": "Employee primary key",
+      "semantic_meaning": "Employee identifier",
+      "synonyms": ["empId", "userId", "personId"],
+      "priority": 4,
+      "is_required": true
+    },
+    {
+      "field_path": "data[].employee.firstName",
+      "field_name": "employee.firstName",
+      "data_type": "string",
+      "example_value": "John",
+      "description": "Employee's first name",
+      "business_context": "Employee personal information",
+      "semantic_meaning": "Given name",
+      "synonyms": ["first_name", "givenName", "forename"],
+      "priority": 3,
+      "is_required": false
+    },
+    {
+      "field_path": "data[].employee.lastName",
+      "field_name": "employee.lastName",
+      "data_type": "string",
+      "example_value": "Doe",
+      "description": "Employee's last name",
+      "business_context": "Employee personal information",
+      "semantic_meaning": "Family name",
+      "synonyms": ["last_name", "surname", "familyName"],
+      "priority": 3,
+      "is_required": false
+    },
+    {
+      "field_path": "data[].employee.email",
+      "field_name": "employee.email",
+      "data_type": "string",
+      "example_value": "john.doe@company.com",
+      "description": "Employee's email address",
+      "business_context": "Employee contact information",
+      "semantic_meaning": "Email address",
+      "synonyms": ["emailAddress", "mail", "contactEmail"],
+      "priority": 4,
+      "is_required": false
+    },
+    {
+      "field_path": "data[].employee.department",
+      "field_name": "employee.department",
+      "data_type": "string",
+      "example_value": "Engineering",
+      "description": "Employee's department",
+      "business_context": "Organizational structure",
+      "semantic_meaning": "Department name",
+      "synonyms": ["dept", "division", "team"],
+      "priority": 2,
+      "is_required": false
+    },
+    {
+      "field_path": "data[].employee.managerId",
+      "field_name": "employee.managerId",
+      "data_type": "string",
+      "example_value": "emp_11111",
+      "description": "ID of the employee's manager",
+      "business_context": "Reporting structure",
+      "semantic_meaning": "Manager identifier",
+      "synonyms": ["manager_id", "supervisorId", "reportingTo"],
+      "priority": 3,
+      "is_required": false
+    },
+    {
+      "field_path": "data[].absenceType",
+      "field_name": "absenceType",
+      "data_type": "string",
+      "example_value": "sick_leave",
+      "description": "Type of absence being requested",
+      "business_context": "Absence categorization",
+      "semantic_meaning": "Absence type",
+      "synonyms": ["type", "leaveType", "absenceCategory"],
+      "priority": 5,
+      "is_required": true
+    },
+    {
+      "field_path": "data[].startDate",
+      "field_name": "startDate",
+      "data_type": "string",
+      "example_value": "2024-12-15",
+      "description": "Start date of the absence period",
+      "business_context": "Absence period definition",
+      "semantic_meaning": "Start date",
+      "synonyms": ["fromDate", "beginDate", "start"],
+      "priority": 5,
+      "is_required": true
+    },
+    {
+      "field_path": "data[].endDate",
+      "field_name": "endDate",
+      "data_type": "string",
+      "example_value": "2024-12-17",
+      "description": "End date of the absence period",
+      "business_context": "Absence period definition",
+      "semantic_meaning": "End date",
+      "synonyms": ["toDate", "finishDate", "end"],
+      "priority": 5,
+      "is_required": true
+    },
+    {
+      "field_path": "data[].duration.value",
+      "field_name": "duration.value",
+      "data_type": "number",
+      "example_value": 3,
+      "description": "Duration value of the absence",
+      "business_context": "Absence duration calculation",
+      "semantic_meaning": "Duration value",
+      "synonyms": ["amount", "length", "period"],
+      "priority": 4,
+      "is_required": false
+    },
+    {
+      "field_path": "data[].duration.unit",
+      "field_name": "duration.unit",
+      "data_type": "string",
+      "example_value": "days",
+      "description": "Unit of measurement for duration",
+      "business_context": "Duration unit specification",
+      "semantic_meaning": "Duration unit",
+      "synonyms": ["unit", "measure", "timeUnit"],
+      "priority": 4,
+      "is_required": false
+    },
+    {
+      "field_path": "data[].status",
+      "field_name": "status",
+      "data_type": "string",
+      "example_value": "approved",
+      "description": "Current status of the absence request",
+      "business_context": "Absence workflow status",
+      "semantic_meaning": "Status",
+      "synonyms": ["state", "condition", "workflowStatus"],
+      "priority": 5,
+      "is_required": true
+    },
+    {
+      "field_path": "data[].reason",
+      "field_name": "reason",
+      "data_type": "string",
+      "example_value": "Flu symptoms",
+      "description": "Reason or description for the absence",
+      "business_context": "Absence justification",
+      "semantic_meaning": "Reason",
+      "synonyms": ["description", "comment", "justification"],
+      "priority": 4,
+      "is_required": false
+    }
+  ],
+  "pagination_fields": [
+    {
+      "field_path": "pagination.page",
+      "field_name": "page",
+      "data_type": "number",
+      "example_value": 1,
+      "description": "Current page number",
+      "priority": 2
+    },
+    {
+      "field_path": "pagination.pageSize",
+      "field_name": "pageSize",
+      "data_type": "number",
+      "example_value": 50,
+      "description": "Number of items per page",
+      "priority": 2
+    },
+    {
+      "field_path": "pagination.total",
+      "field_name": "total",
+      "data_type": "number",
+      "example_value": 2,
+      "description": "Total number of items",
+      "priority": 2
+    },
+    {
+      "field_path": "pagination.totalPages",
+      "field_name": "totalPages",
+      "data_type": "number",
+      "example_value": 1,
+      "description": "Total number of pages",
+      "priority": 2
+    }
+  ],
+  "metadata_fields": [
+    {
+      "field_path": "metadata.requestId",
+      "field_name": "requestId",
+      "data_type": "string",
+      "example_value": "req_abc123",
+      "description": "Unique request identifier",
+      "priority": 1
+    },
+    {
+      "field_path": "metadata.correlationId",
+      "field_name": "correlationId",
+      "data_type": "string",
+      "example_value": "corr_xyz789",
+      "description": "Correlation ID for tracking",
+      "priority": 1
+    },
+    {
+      "field_path": "metadata.processingTime",
+      "field_name": "processingTime",
+      "data_type": "string",
+      "example_value": "150ms",
+      "description": "Request processing time",
+      "priority": 1
+    }
+  ],
+  "analysis_quality": {
+    "completeness_score": 0.95,
+    "accuracy_score": 0.98,
+    "semantic_quality": 0.92,
+    "overall_quality": 0.95
+  }
+}

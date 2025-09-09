@@ -1,0 +1,276 @@
+{
+  "success": true,
+  "timestamp": "2024-12-08T14:30:50Z",
+  "collection_name": "stackone_v2",
+  "total_queries_executed": 8,
+  "queries": [
+    {
+      "query_id": 1,
+      "query": "time-off entry creation endpoint with employee data",
+      "limit": 5,
+      "score_threshold": 0.7,
+      "results": [
+        {
+          "content": "POST /timeOffEntries - Create time-off entry for an employee. Request body includes employeeId, timeOffType, startDate, endDate, and description. Returns TimeOffEntryResponse with created entry details.",
+          "score": 0.95,
+          "metadata": {
+            "endpoint": "/timeOffEntries",
+            "method": "POST",
+            "operation_id": "createTimeOffEntry"
+          }
+        },
+        {
+          "content": "CreateTimeOffEntryRequest schema: employeeId (string, required), timeOffType (enum: sick, vacation, personal, maternity, paternity, bereavement, jury_duty, other), startDate (date, required), endDate (date, required), description (string, required).",
+          "score": 0.92,
+          "metadata": {
+            "schema": "CreateTimeOffEntryRequest",
+            "type": "request_body"
+          }
+        },
+        {
+          "content": "TimeOffEntryResponse schema includes id, employeeId, employee (EmployeeInfo object), timeOffType, startDate, endDate, duration, status, description, createdAt, updatedAt, approvedBy, approvedAt.",
+          "score": 0.89,
+          "metadata": {
+            "schema": "TimeOffEntryResponse",
+            "type": "response_body"
+          }
+        }
+      ]
+    },
+    {
+      "query_id": 2,
+      "query": "employee information fields and structure",
+      "limit": 5,
+      "score_threshold": 0.7,
+      "results": [
+        {
+          "content": "EmployeeInfo schema: id (string), firstName (string), lastName (string), email (string), department (string), managerId (string). Used in TimeOffEntryResponse.employee field.",
+          "score": 0.94,
+          "metadata": {
+            "schema": "EmployeeInfo",
+            "type": "data_model"
+          }
+        },
+        {
+          "content": "Employee data is embedded in time-off entries and includes personal information like name, email, and organizational structure with department and managerId.",
+          "score": 0.87,
+          "metadata": {
+            "context": "employee_data",
+            "type": "description"
+          }
+        }
+      ]
+    },
+    {
+      "query_id": 3,
+      "query": "time-off types and absence categories",
+      "limit": 5,
+      "score_threshold": 0.7,
+      "results": [
+        {
+          "content": "timeOffType enum values: sick, vacation, personal, maternity, paternity, bereavement, jury_duty, other. Used in both request and response schemas.",
+          "score": 0.96,
+          "metadata": {
+            "enum": "timeOffType",
+            "type": "enumeration"
+          }
+        },
+        {
+          "content": "GET /timeOffTypes endpoint returns available time-off types with id, name, code, description, and isActive status.",
+          "score": 0.88,
+          "metadata": {
+            "endpoint": "/timeOffTypes",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "query_id": 4,
+      "query": "status values and workflow states",
+      "limit": 5,
+      "score_threshold": 0.7,
+      "results": [
+        {
+          "content": "Time-off entry status enum: draft, submitted, approved, rejected, cancelled. Represents the workflow state of a time-off request.",
+          "score": 0.93,
+          "metadata": {
+            "enum": "status",
+            "type": "enumeration"
+          }
+        },
+        {
+          "content": "Status transitions: draft -> submitted -> approved/rejected. Cancelled can occur at any stage. approvedBy and approvedAt fields track approval information.",
+          "score": 0.85,
+          "metadata": {
+            "context": "workflow",
+            "type": "description"
+          }
+        }
+      ]
+    },
+    {
+      "query_id": 5,
+      "query": "duration and time period handling",
+      "limit": 5,
+      "score_threshold": 0.7,
+      "results": [
+        {
+          "content": "TimeOffDuration schema: days (number), hours (number). Represents the duration of time-off in both days and hours.",
+          "score": 0.91,
+          "metadata": {
+            "schema": "TimeOffDuration",
+            "type": "data_model"
+          }
+        },
+        {
+          "content": "Duration calculation is based on startDate and endDate. The system automatically calculates both days and hours for the time-off period.",
+          "score": 0.82,
+          "metadata": {
+            "context": "duration_calculation",
+            "type": "description"
+          }
+        }
+      ]
+    },
+    {
+      "query_id": 6,
+      "query": "authentication and security requirements",
+      "limit": 5,
+      "score_threshold": 0.7,
+      "results": [
+        {
+          "content": "API uses ApiKeyAuth security scheme with X-API-Key header. All endpoints require authentication except for health checks.",
+          "score": 0.94,
+          "metadata": {
+            "security": "ApiKeyAuth",
+            "type": "authentication"
+          }
+        },
+        {
+          "content": "Security scheme definition: type: apiKey, in: header, name: X-API-Key. Applied to all protected endpoints.",
+          "score": 0.89,
+          "metadata": {
+            "security_scheme": "ApiKeyAuth",
+            "type": "security_definition"
+          }
+        }
+      ]
+    },
+    {
+      "query_id": 7,
+      "query": "pagination and list operations",
+      "limit": 5,
+      "score_threshold": 0.7,
+      "results": [
+        {
+          "content": "GET /timeOffEntries supports pagination with page, limit parameters. Response includes PaginationInfo with page, limit, total, totalPages.",
+          "score": 0.92,
+          "metadata": {
+            "endpoint": "/timeOffEntries",
+            "method": "GET",
+            "feature": "pagination"
+          }
+        },
+        {
+          "content": "PaginationInfo schema: page (integer), limit (integer, max 100), total (integer), totalPages (integer). Default page=1, limit=20.",
+          "score": 0.87,
+          "metadata": {
+            "schema": "PaginationInfo",
+            "type": "data_model"
+          }
+        }
+      ]
+    },
+    {
+      "query_id": 8,
+      "query": "error handling and response codes",
+      "limit": 5,
+      "score_threshold": 0.7,
+      "results": [
+        {
+          "content": "Standard HTTP status codes: 200 (success), 201 (created), 400 (bad request), 401 (unauthorized), 404 (not found), 422 (validation error), 500 (internal server error).",
+          "score": 0.90,
+          "metadata": {
+            "context": "error_handling",
+            "type": "status_codes"
+          }
+        },
+        {
+          "content": "ResponseMeta includes requestId, correlationId, processingTime for request tracking and debugging purposes.",
+          "score": 0.84,
+          "metadata": {
+            "schema": "ResponseMeta",
+            "type": "data_model"
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_results": 24,
+    "average_score": 0.89,
+    "high_confidence_results": 18,
+    "medium_confidence_results": 6,
+    "low_confidence_results": 0
+  },
+  "mapping_insights": [
+    {
+      "field": "absenceType",
+      "target_field": "timeOffType",
+      "confidence": 0.96,
+      "transformation": "enum_mapping",
+      "mapping_rules": {
+        "sick_leave": "sick",
+        "vacation": "vacation",
+        "personal_leave": "personal",
+        "maternity_leave": "maternity",
+        "paternity_leave": "paternity",
+        "bereavement": "bereavement",
+        "jury_duty": "jury_duty",
+        "other": "other"
+      }
+    },
+    {
+      "field": "status",
+      "target_field": "status",
+      "confidence": 0.93,
+      "transformation": "enum_mapping",
+      "mapping_rules": {
+        "pending": "submitted",
+        "approved": "approved",
+        "rejected": "rejected",
+        "cancelled": "cancelled"
+      }
+    },
+    {
+      "field": "duration.value",
+      "target_field": "duration.days",
+      "confidence": 0.91,
+      "transformation": "conditional_mapping",
+      "mapping_logic": "If unit='days' then direct mapping, if unit='hours' then divide by 8"
+    }
+  ],
+  "endpoint_analysis": {
+    "primary_endpoint": {
+      "path": "/timeOffEntries",
+      "method": "POST",
+      "purpose": "Create new time-off entries",
+      "confidence": 0.95
+    },
+    "secondary_endpoints": [
+      {
+        "path": "/timeOffEntries",
+        "method": "GET",
+        "purpose": "List time-off entries with filtering",
+        "confidence": 0.92
+      },
+      {
+        "path": "/timeOffEntries/{entryId}",
+        "method": "GET",
+        "purpose": "Get specific time-off entry",
+        "confidence": 0.89
+      }
+    ]
+  }
+}

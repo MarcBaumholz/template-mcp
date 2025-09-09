@@ -1,0 +1,125 @@
+{
+  "fields": [
+    "employeeId",
+    "type",
+    "status"
+  ],
+  "descriptions": {
+    "employeeId": {
+      "semantic_description": "Unique identifier for the employee",
+      "use_case": "Link absence record to employee"
+    },
+    "type": {
+      "semantic_description": "Category of absence requested",
+      "use_case": "Determine leave policy rules"
+    },
+    "status": {
+      "semantic_description": "Current state of the request",
+      "use_case": "Filter pending or approved leaves"
+    }
+  },
+  "evidence": {
+    "employeeId": [
+      {
+        "text": "Schema: AbsenceType\nType: object\nDescription: Represents a type of absence with additional configuration\nsupport which an employee can then consume.\nRequired Fields: external_id, name, unit, half_days_supported, exact_times_supported, created_at, updated_at",
+        "score": 0.5047505,
+        "semantic_score": 0.5047505,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceType"
+        }
+      },
+      {
+        "text": "Properties for PostHrisAbsencesSuccessfulResponseData:\n• id (string)\n• remote_id (string)\n• employee_id (string)\n• approver_id (string)\n• start_date (string)\n• end_date (string)\n• start_half_day (boolean)\n• end_half_day (boolean)\n• start_time (string)\n• end_time (string)\n• amount (number)\n• unit (string) - values: HOURS, DAYS\n• status (string)\n• employee_note (string)\n• type_id (string)\n• changed_at (string)\n• remote_deleted_at (string)\n• remote_data (string)",
+        "score": 0.5030719,
+        "semantic_score": 0.5030719,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "PostHrisAbsencesSuccessfulResponseData",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Schema: GetHrisAbsenceTypesSuccessfulResponse\nType: object",
+        "score": 0.47426218,
+        "semantic_score": 0.47426218,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponse"
+        }
+      }
+    ],
+    "type": [
+      {
+        "text": "Schema: Absences\nType: object",
+        "score": 0.6785144,
+        "semantic_score": 0.6785144,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "Absences"
+        }
+      },
+      {
+        "text": "Schema: AbsenceCreation\nType: object",
+        "score": 0.6124339,
+        "semantic_score": 0.6124339,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceCreation"
+        }
+      },
+      {
+        "text": "Schema: GetHrisAbsenceTypesSuccessfulResponseData\nType: object",
+        "score": 0.54454243,
+        "semantic_score": 0.54454243,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponseData"
+        }
+      }
+    ],
+    "status": [
+      {
+        "text": "Properties for AbsenceStatus:\n• raw (string): contains the value of the external system if it cannot be mapped because it is unknown.\n• mapped (string): defines the type of the status. - values: REQUESTED, PENDING, APPROVED",
+        "score": 0.5817143,
+        "semantic_score": 0.5817143,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "AbsenceStatus",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Properties for GetHrisAbsenceTypesSuccessfulResponse:\n• status (string) - values: SUCCESS\n• data",
+        "score": 0.5599445,
+        "semantic_score": 0.5599445,
+        "chunk_type": "schema_properties",
+        "metadata": {
+          "type": "schema_properties",
+          "schema_name": "GetHrisAbsenceTypesSuccessfulResponse",
+          "chunk_index": null
+        }
+      },
+      {
+        "text": "Schema: AbsenceType\nType: object\nDescription: Represents a type of absence with additional configuration\nsupport which an employee can then consume.\nRequired Fields: external_id, name, unit, half_days_supported, exact_times_supported, created_at, updated_at",
+        "score": 0.5269739,
+        "semantic_score": 0.5269739,
+        "chunk_type": "schema_summary",
+        "metadata": {
+          "type": "schema_summary",
+          "schema_name": "AbsenceType"
+        }
+      }
+    ]
+  },
+  "processing_context": "HR field analysis",
+  "enhancement_confidence": 0.554,
+  "total_fields_identified": 3
+}

@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "timestamp": "2024-12-08T14:30:15Z",
+  "rag_connectivity": {
+    "status": "connected",
+    "response_time": "120ms",
+    "qdrant_url": "https://qdrant.flip.com",
+    "api_key_configured": true
+  },
+  "llm_connectivity": {
+    "status": "connected",
+    "model": "qwen/qwen3-coder:free",
+    "response_time": "2.3s",
+    "openrouter_configured": true
+  },
+  "system_health": {
+    "memory_usage": "1.2GB",
+    "cpu_usage": "15%",
+    "disk_space": "45GB available",
+    "network_latency": "50ms"
+  },
+  "test_queries": [
+    {
+      "query": "test connection",
+      "response": "RAG system is operational and ready for API specification ingestion",
+      "confidence": 0.95
+    }
+  ],
+  "recommendations": [
+    "RAG system is healthy and ready for workflow execution",
+    "LLM connectivity is stable with good response times",
+    "System resources are adequate for processing API specifications"
+  ]
+}

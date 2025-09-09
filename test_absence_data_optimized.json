@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "id": "abs_123",
+      "employeeId": "12345",
+      "type": "vacation",
+      "status": "approved",
+      "startDate": "2025-06-01",
+      "endDate": "2025-06-05",
+      "duration": { "value": 5, "unit": "days" },
+      "createdAt": "2025-05-15T09:30:00Z",
+      "updatedAt": "2025-05-20T10:00:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "pageSize": 50,
+    "total": 123
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "total_requests": 51,
+  "requests_by_tool": {
+    "llm_client": {
+      "count": 34,
+      "tokens": 11490,
+      "first_request": "2025-09-05T11:21:14.094095",
+      "last_request": "2025-09-09T11:19:18.266055"
+    },
+    "json_analysis_agent": {
+      "count": 17,
+      "tokens": 0,
+      "first_request": "2025-09-05T11:29:12.153130",
+      "last_request": "2025-09-08T17:41:31.939169"
+    }
+  },
+  "requests_by_model": {
+    "qwen/qwen3-coder:free": {
+      "count": 33,
+      "tokens": 11490
+    },
+    "deepseek/deepseek-chat": {
+      "count": 1,
+      "tokens": 0
+    },
+    "moonshotai/kimi-k2:free": {
+      "count": 11,
+      "tokens": 0
+    },
+    "deepseek/deepseek-chat-v3.1:free": {
+      "count": 6,
+      "tokens": 0
+    }
+  },
+  "daily_counts": {
+    "2025-09-05": 31,
+    "2025-09-08": 19,
+    "2025-09-09": 1
+  },
+  "session_start": "2025-09-05T11:21:14.094064",
+  "last_updated": "2025-09-09T11:19:18.266106"
+}

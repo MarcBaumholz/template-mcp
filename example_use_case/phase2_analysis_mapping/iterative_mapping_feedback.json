@@ -1,0 +1,284 @@
+{
+  "success": true,
+  "timestamp": "2024-12-08T14:31:30Z",
+  "tool": "iterative_mapping_with_feedback",
+  "source_fields": "id,employeeId,absenceType,startDate,endDate,status,reason,employee.email,employee.firstName,employee.lastName,duration.value,employee.managerId",
+  "target_collection": "stackone_v2",
+  "api_spec_path": "/example_use_case/sample_data/stackone_api_spec.json",
+  "max_iterations": 3,
+  "iteration_results": [
+    {
+      "iteration": 1,
+      "timestamp": "2024-12-08T14:31:35Z",
+      "status": "initial_mapping",
+      "mapping_results": {
+        "total_fields": 12,
+        "mapped_fields": 8,
+        "unmapped_fields": 4,
+        "confidence_scores": {
+          "id": 0.98,
+          "employeeId": 0.98,
+          "absenceType": 0.85,
+          "startDate": 0.99,
+          "endDate": 0.99,
+          "status": 0.82,
+          "reason": 0.95,
+          "employee.email": 0.98
+        }
+      },
+      "feedback": {
+        "type": "mapping_gaps",
+        "message": "Initial mapping identified 4 unmapped fields. Need to address employee.firstName, employee.lastName, duration.value, and employee.managerId mappings.",
+        "suggestions": [
+          "Map employee.firstName to TimeOffEntryResponse.employee.firstName",
+          "Map employee.lastName to TimeOffEntryResponse.employee.lastName", 
+          "Map duration.value to TimeOffEntryResponse.duration.days with unit conversion",
+          "Map employee.managerId to TimeOffEntryResponse.employee.managerId"
+        ],
+        "confidence_threshold": 0.8
+      },
+      "next_action": "refine_mappings"
+    },
+    {
+      "iteration": 2,
+      "timestamp": "2024-12-08T14:31:45Z",
+      "status": "refined_mapping",
+      "mapping_results": {
+        "total_fields": 12,
+        "mapped_fields": 11,
+        "unmapped_fields": 1,
+        "confidence_scores": {
+          "id": 0.98,
+          "employeeId": 0.98,
+          "absenceType": 0.92,
+          "startDate": 0.99,
+          "endDate": 0.99,
+          "status": 0.88,
+          "reason": 0.95,
+          "employee.email": 0.98,
+          "employee.firstName": 0.98,
+          "employee.lastName": 0.98,
+          "employee.managerId": 0.88
+        }
+      },
+      "feedback": {
+        "type": "enum_mapping_improvement",
+        "message": "Improved enum mappings for absenceType and status. Still need to address duration.value mapping with proper unit conversion logic.",
+        "suggestions": [
+          "Implement conditional duration mapping: if duration.unit == 'days' then direct mapping, if duration.unit == 'hours' then divide by 8",
+          "Add validation for duration consistency with date range",
+          "Consider adding duration.hours field mapping for completeness"
+        ],
+        "confidence_threshold": 0.85
+      },
+      "next_action": "finalize_duration_mapping"
+    },
+    {
+      "iteration": 3,
+      "timestamp": "2024-12-08T14:31:55Z",
+      "status": "final_mapping",
+      "mapping_results": {
+        "total_fields": 12,
+        "mapped_fields": 12,
+        "unmapped_fields": 0,
+        "confidence_scores": {
+          "id": 0.98,
+          "employeeId": 0.98,
+          "absenceType": 0.95,
+          "startDate": 0.99,
+          "endDate": 0.99,
+          "status": 0.92,
+          "reason": 0.95,
+          "employee.email": 0.98,
+          "employee.firstName": 0.98,
+          "employee.lastName": 0.98,
+          "employee.managerId": 0.88,
+          "duration.value": 0.90
+        }
+      },
+      "feedback": {
+        "type": "mapping_complete",
+        "message": "All fields successfully mapped with high confidence. Duration mapping implemented with proper unit conversion logic.",
+        "suggestions": [
+          "Add comprehensive validation for all mapped fields",
+          "Implement error handling for edge cases in duration conversion",
+          "Consider adding audit logging for mapping transformations"
+        ],
+        "confidence_threshold": 0.9
+      },
+      "next_action": "validation_complete"
+    }
+  ],
+  "final_mapping_summary": {
+    "total_iterations": 3,
+    "final_confidence": 0.94,
+    "mapping_completeness": 1.0,
+    "quality_score": 0.95,
+    "recommended_actions": [
+      "Proceed with implementation",
+      "Add comprehensive test coverage",
+      "Implement validation rules",
+      "Add error handling for edge cases"
+    ]
+  },
+  "detailed_mappings": [
+    {
+      "source_field": "id",
+      "target_field": "TimeOffEntryResponse.id",
+      "confidence": 0.98,
+      "transformation": "direct_mapping",
+      "validation": "required",
+      "iteration_added": 1
+    },
+    {
+      "source_field": "employeeId",
+      "target_field": "TimeOffEntryResponse.employeeId", 
+      "confidence": 0.98,
+      "transformation": "direct_mapping",
+      "validation": "required",
+      "iteration_added": 1
+    },
+    {
+      "source_field": "absenceType",
+      "target_field": "TimeOffEntryResponse.timeOffType",
+      "confidence": 0.95,
+      "transformation": "enum_mapping",
+      "validation": "enum_validation",
+      "mapping_rules": {
+        "sick_leave": "sick",
+        "vacation": "vacation",
+        "personal_leave": "personal",
+        "maternity_leave": "maternity",
+        "paternity_leave": "paternity",
+        "bereavement": "bereavement",
+        "jury_duty": "jury_duty",
+        "other": "other"
+      },
+      "iteration_added": 1,
+      "iteration_improved": 2
+    },
+    {
+      "source_field": "startDate",
+      "target_field": "TimeOffEntryResponse.startDate",
+      "confidence": 0.99,
+      "transformation": "direct_mapping",
+      "validation": "date_format",
+      "iteration_added": 1
+    },
+    {
+      "source_field": "endDate",
+      "target_field": "TimeOffEntryResponse.endDate",
+      "confidence": 0.99,
+      "transformation": "direct_mapping", 
+      "validation": "date_format",
+      "iteration_added": 1
+    },
+    {
+      "source_field": "status",
+      "target_field": "TimeOffEntryResponse.status",
+      "confidence": 0.92,
+      "transformation": "enum_mapping",
+      "validation": "enum_validation",
+      "mapping_rules": {
+        "pending": "submitted",
+        "approved": "approved",
+        "rejected": "rejected",
+        "cancelled": "cancelled"
+      },
+      "iteration_added": 1,
+      "iteration_improved": 2
+    },
+    {
+      "source_field": "reason",
+      "target_field": "TimeOffEntryResponse.description",
+      "confidence": 0.95,
+      "transformation": "direct_mapping",
+      "validation": "optional",
+      "iteration_added": 1
+    },
+    {
+      "source_field": "employee.email",
+      "target_field": "TimeOffEntryResponse.employee.email",
+      "confidence": 0.98,
+      "transformation": "direct_mapping",
+      "validation": "email_format",
+      "iteration_added": 1
+    },
+    {
+      "source_field": "employee.firstName",
+      "target_field": "TimeOffEntryResponse.employee.firstName",
+      "confidence": 0.98,
+      "transformation": "direct_mapping",
+      "validation": "optional",
+      "iteration_added": 2
+    },
+    {
+      "source_field": "employee.lastName",
+      "target_field": "TimeOffEntryResponse.employee.lastName",
+      "confidence": 0.98,
+      "transformation": "direct_mapping",
+      "validation": "optional",
+      "iteration_added": 2
+    },
+    {
+      "source_field": "employee.managerId",
+      "target_field": "TimeOffEntryResponse.employee.managerId",
+      "confidence": 0.88,
+      "transformation": "direct_mapping",
+      "validation": "optional",
+      "iteration_added": 2
+    },
+    {
+      "source_field": "duration.value",
+      "target_field": "TimeOffEntryResponse.duration.days",
+      "confidence": 0.90,
+      "transformation": "conditional_mapping",
+      "validation": "numeric",
+      "mapping_logic": "if duration.unit == 'days' then direct mapping, if duration.unit == 'hours' then divide by 8",
+      "iteration_added": 3
+    }
+  ],
+  "feedback_analysis": {
+    "total_feedback_points": 9,
+    "addressed_feedback": 9,
+    "feedback_types": {
+      "mapping_gaps": 4,
+      "enum_mapping_improvement": 2,
+      "validation_enhancement": 2,
+      "edge_case_handling": 1
+    },
+    "feedback_effectiveness": 0.95
+  },
+  "quality_improvements": {
+    "iteration_1_to_2": {
+      "mapping_coverage": "+25%",
+      "confidence_improvement": "+0.05",
+      "key_improvements": ["Added employee name mappings", "Improved enum mappings"]
+    },
+    "iteration_2_to_3": {
+      "mapping_coverage": "+8%", 
+      "confidence_improvement": "+0.02",
+      "key_improvements": ["Added duration mapping with unit conversion", "Completed all field mappings"]
+    }
+  },
+  "recommendations": [
+    {
+      "type": "implementation",
+      "description": "Implement all 12 field mappings with proper validation",
+      "priority": "high",
+      "confidence": 0.94
+    },
+    {
+      "type": "testing",
+      "description": "Create comprehensive test suite covering all mapping scenarios",
+      "priority": "high",
+      "confidence": 0.95
+    },
+    {
+      "type": "monitoring",
+      "description": "Add logging and monitoring for mapping transformations",
+      "priority": "medium",
+      "confidence": 0.90
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+{
+  "success": true,
+  "timestamp": "2024-12-08T14:31:00Z",
+  "analysis_type": "enhanced_rag_analysis",
+  "fields_analyzed": [
+    "id",
+    "employeeId", 
+    "absenceType",
+    "startDate",
+    "endDate",
+    "status",
+    "reason",
+    "employee.email",
+    "employee.firstName",
+    "employee.lastName",
+    "duration.value",
+    "employee.managerId"
+  ],
+  "collection_name": "stackone_v2",
+  "context_topic": "HR absence management integration",
+  "enhanced_analysis": {
+    "semantic_groupings": [
+      {
+        "group_name": "Core Identification",
+        "fields": ["id", "employeeId"],
+        "semantic_meaning": "Unique identifiers for absence records and employees",
+        "target_mappings": [
+          {
+            "field": "id",
+            "target": "TimeOffEntryResponse.id",
+            "confidence": 0.98,
+            "transformation": "direct_mapping",
+            "business_context": "Primary key for absence tracking"
+          },
+          {
+            "field": "employeeId", 
+            "target": "TimeOffEntryResponse.employeeId",
+            "confidence": 0.98,
+            "transformation": "direct_mapping",
+            "business_context": "Employee reference for absence association"
+          }
+        ]
+      },
+      {
+        "group_name": "Absence Classification",
+        "fields": ["absenceType", "status"],
+        "semantic_meaning": "Categorization and workflow state of absence requests",
+        "target_mappings": [
+          {
+            "field": "absenceType",
+            "target": "TimeOffEntryResponse.timeOffType",
+            "confidence": 0.95,
+            "transformation": "enum_mapping",
+            "business_context": "Absence type classification",
+            "mapping_rules": {
+              "sick_leave": "sick",
+              "vacation": "vacation", 
+              "personal_leave": "personal",
+              "maternity_leave": "maternity",
+              "paternity_leave": "paternity",
+              "bereavement": "bereavement",
+              "jury_duty": "jury_duty",
+              "other": "other"
+            }
+          },
+          {
+            "field": "status",
+            "target": "TimeOffEntryResponse.status",
+            "confidence": 0.92,
+            "transformation": "enum_mapping",
+            "business_context": "Workflow state management",
+            "mapping_rules": {
+              "pending": "submitted",
+              "approved": "approved",
+              "rejected": "rejected", 
+              "cancelled": "cancelled"
+            }
+          }
+        ]
+      },
+      {
+        "group_name": "Time Period Definition",
+        "fields": ["startDate", "endDate", "duration.value"],
+        "semantic_meaning": "Temporal boundaries and duration of absence periods",
+        "target_mappings": [
+          {
+            "field": "startDate",
+            "target": "TimeOffEntryResponse.startDate",
+            "confidence": 0.99,
+            "transformation": "direct_mapping",
+            "business_context": "Absence period start"
+          },
+          {
+            "field": "endDate",
+            "target": "TimeOffEntryResponse.endDate", 
+            "confidence": 0.99,
+            "transformation": "direct_mapping",
+            "business_context": "Absence period end"
+          },
+          {
+            "field": "duration.value",
+            "target": "TimeOffEntryResponse.duration.days",
+            "confidence": 0.85,
+            "transformation": "conditional_mapping",
+            "business_context": "Duration calculation",
+            "mapping_logic": "Convert based on duration.unit: if 'days' then direct, if 'hours' then divide by 8"
+          }
+        ]
+      },
+      {
+        "group_name": "Employee Information",
+        "fields": ["employee.email", "employee.firstName", "employee.lastName", "employee.managerId"],
+        "semantic_meaning": "Employee personal and organizational data",
+        "target_mappings": [
+          {
+            "field": "employee.email",
+            "target": "TimeOffEntryResponse.employee.email",
+            "confidence": 0.98,
+            "transformation": "direct_mapping",
+            "business_context": "Employee contact information"
+          },
+          {
+            "field": "employee.firstName",
+            "target": "TimeOffEntryResponse.employee.firstName",
+            "confidence": 0.98,
+            "transformation": "direct_mapping",
+            "business_context": "Employee personal information"
+          },
+          {
+            "field": "employee.lastName",
+            "target": "TimeOffEntryResponse.employee.lastName",
+            "confidence": 0.98,
+            "transformation": "direct_mapping",
+            "business_context": "Employee personal information"
+          },
+          {
+            "field": "employee.managerId",
+            "target": "TimeOffEntryResponse.employee.managerId",
+            "confidence": 0.88,
+            "transformation": "direct_mapping",
+            "business_context": "Organizational hierarchy"
+          }
+        ]
+      },
+      {
+        "group_name": "Absence Justification",
+        "fields": ["reason"],
+        "semantic_meaning": "Explanation and context for absence requests",
+        "target_mappings": [
+          {
+            "field": "reason",
+            "target": "TimeOffEntryResponse.description",
+            "confidence": 0.96,
+            "transformation": "direct_mapping",
+            "business_context": "Absence justification and context"
+          }
+        ]
+      }
+    ],
+    "cross_field_relationships": [
+      {
+        "relationship": "employee_consistency",
+        "fields": ["employeeId", "employee.id"],
+        "description": "Employee ID should match between top-level and nested employee object",
+        "validation_rule": "employeeId == employee.id",
+        "confidence": 0.99
+      },
+      {
+        "relationship": "date_validation",
+        "fields": ["startDate", "endDate", "duration.value"],
+        "description": "Duration should be consistent with date range",
+        "validation_rule": "duration.value should match calculated days between startDate and endDate",
+        "confidence": 0.85
+      },
+      {
+        "relationship": "status_workflow",
+        "fields": ["status", "approvedBy", "approvedAt"],
+        "description": "Approval fields should be populated when status is approved",
+        "validation_rule": "if status == 'approved' then approvedBy and approvedAt should not be null",
+        "confidence": 0.90
+      }
+    ],
+    "business_rules": [
+      {
+        "rule": "absence_type_validation",
+        "description": "Absence type must be one of the predefined enum values",
+        "fields": ["absenceType"],
+        "validation": "absenceType in [sick_leave, vacation, personal_leave, maternity_leave, paternity_leave, bereavement, jury_duty, other]",
+        "confidence": 0.95
+      },
+      {
+        "rule": "date_range_validation", 
+        "description": "End date must be after start date",
+        "fields": ["startDate", "endDate"],
+        "validation": "endDate > startDate",
+        "confidence": 0.99
+      },
+      {
+        "rule": "employee_data_completeness",
+        "description": "Employee information should be complete for processing",
+        "fields": ["employeeId", "employee.email"],
+        "validation": "employeeId and employee.email are required",
+        "confidence": 0.92
+      }
+    ]
+  },
+  "semantic_analysis": {
+    "field_similarity_scores": {
+      "id": {
+        "TimeOffEntryResponse.id": 0.98,
+        "TimeOffEntryResponse.employeeId": 0.15
+      },
+      "employeeId": {
+        "TimeOffEntryResponse.employeeId": 0.98,
+        "TimeOffEntryResponse.employee.id": 0.95
+      },
+      "absenceType": {
+        "TimeOffEntryResponse.timeOffType": 0.95,
+        "TimeOffEntryResponse.description": 0.25
+      },
+      "startDate": {
+        "TimeOffEntryResponse.startDate": 0.99,
+        "TimeOffEntryResponse.endDate": 0.20
+      },
+      "endDate": {
+        "TimeOffEntryResponse.endDate": 0.99,
+        "TimeOffEntryResponse.startDate": 0.20
+      },
+      "status": {
+        "TimeOffEntryResponse.status": 0.92,
+        "TimeOffEntryResponse.timeOffType": 0.15
+      },
+      "reason": {
+        "TimeOffEntryResponse.description": 0.96,
+        "TimeOffEntryResponse.timeOffType": 0.10
+      }
+    },
+    "contextual_understanding": {
+      "domain": "HR absence management",
+      "business_process": "Employee absence request and approval workflow",
+      "data_flow": "Flip HRIS -> Integration Service -> StackOne Time-off Management",
+      "key_entities": ["Employee", "Absence", "Manager", "Time-off Entry"],
+      "workflow_stages": ["Request Creation", "Manager Review", "Approval/Rejection", "Notification"]
+    }
+  },
+  "confidence_analysis": {
+    "high_confidence_mappings": 8,
+    "medium_confidence_mappings": 3,
+    "low_confidence_mappings": 1,
+    "overall_confidence": 0.94,
+    "confidence_distribution": {
+      "0.9-1.0": 8,
+      "0.8-0.9": 3,
+      "0.7-0.8": 1,
+      "0.6-0.7": 0,
+      "0.0-0.6": 0
+    }
+  },
+  "recommendations": [
+    {
+      "type": "mapping_optimization",
+      "description": "Use direct mapping for high-confidence fields (id, employeeId, startDate, endDate)",
+      "priority": "high",
+      "impact": "Reduces transformation complexity and potential errors"
+    },
+    {
+      "type": "enum_transformation",
+      "description": "Implement enum mapping functions for absenceType and status fields",
+      "priority": "high", 
+      "impact": "Ensures proper data type conversion between systems"
+    },
+    {
+      "type": "validation_enhancement",
+      "description": "Add cross-field validation for employee consistency and date ranges",
+      "priority": "medium",
+      "impact": "Improves data quality and prevents invalid records"
+    },
+    {
+      "type": "duration_handling",
+      "description": "Implement conditional duration mapping based on unit field",
+      "priority": "medium",
+      "impact": "Handles different duration formats correctly"
+    }
+  ],
+  "quality_metrics": {
+    "completeness_score": 0.95,
+    "accuracy_score": 0.94,
+    "consistency_score": 0.92,
+    "semantic_quality": 0.96,
+    "overall_quality": 0.94
+  }
+}

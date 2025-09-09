@@ -117,10 +117,7 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+
 
 # Pyre type checker
 .pyre/
@@ -269,8 +266,7 @@ api_keys/
 *.p12
 *.pfx
 *.env*
-config.json
-settings.json
+
 credentials/
 secrets.json
 api-keys.json
@@ -322,10 +318,7 @@ chroma_db/
 # Large data files
 *.csv
 *.xlsx
-*.json
-!sample_*.json
-!example_*.json
-!schema_*.json
+
 
 # Temporary Python files
 *.pyc
