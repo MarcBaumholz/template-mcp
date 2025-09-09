@@ -31,7 +31,10 @@ example_use_case/
 ├── phase2_analysis_mapping/            # Field analysis and mapping results
 │   ├── json_field_analysis.json       # Source field extraction
 │   ├── json_field_analysis.md         # Human-readable field analysis
+│   ├── multiple_query_api_spec_results.json # Multi-query API specification analysis
 │   ├── enhanced_rag_analysis.json     # Enhanced semantic analysis
+│   ├── iterative_mapping_feedback.json # Iterative mapping with 3 feedback loops
+│   ├── reasoning_agent_comprehensive_report.md # Comprehensive orchestration report
 │   ├── direct_mapping_prompt.md       # Direct mapping prompt
 │   ├── reasoning_agent_report.md      # Final orchestration report
 │   └── verification_report.json       # API specification verification
@@ -58,9 +61,9 @@ example_use_case/
 - **Purpose:** Ingest API specifications and analyze source data structure
 
 ### Phase 2: Analysis & Mapping
-- **Tools Used:** `enhanced_rag_analysis`, `get_direct_api_mapping_prompt`, `reasoning_agent`, `verify_api_specification`
-- **Outputs:** Field mappings, endpoint analysis, verification reports
-- **Purpose:** Map fields between systems and validate mappings
+- **Tools Used:** `query_api_specification` (multi-query), `enhanced_rag_analysis`, `iterative_mapping_with_feedback`, `get_direct_api_mapping_prompt`, `reasoning_agent`, `verify_api_specification`
+- **Outputs:** Multi-query API analysis, enhanced semantic analysis, iterative feedback results, field mappings, endpoint analysis, verification reports
+- **Purpose:** Map fields between systems and validate mappings through multiple analysis approaches
 
 ### Phase 3: Code Generation
 - **Tools Used:** `phase3_generate_mapper`, `phase3_quality_suite`, `phase3_select_best_candidate`
@@ -83,7 +86,9 @@ example_use_case/
    - Understand field analysis and extraction process
 
 3. **Study Mapping Analysis** (`phase2_analysis_mapping/`)
-   - Review field mapping strategies and results
+   - Review multi-query API specification analysis
+   - Examine enhanced RAG semantic analysis results
+   - Study iterative mapping with 3 feedback loops
    - See how multiple analysis methods are combined
 
 4. **Analyze Code Generation** (`phase3_code_generation/`)
