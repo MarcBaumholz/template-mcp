@@ -58,6 +58,7 @@ _api_spec_getter = None
 _reasoning_agent = None
 _memory_tool = None
 _rules_mcp_tool = None
+_dynamic_task_management_tool = None
 _api_spec_verifier = None
 _phase3_orchestrator = None
 _phase3_quality_suite = None
@@ -114,6 +115,43 @@ def get_rules_mcp_tool():
             'get_info': get_rules_source_info
         }
     return _rules_mcp_tool
+
+def get_dynamic_task_management_tool():
+    """Lazy import dynamic task management tool"""
+    global _dynamic_task_management_tool
+    if _dynamic_task_management_tool is None:
+        from tools.phase0_bootstrap.dynamic_task_management_tool import mcp_dynamic_task_management
+        _dynamic_task_management_tool = mcp_dynamic_task_management
+    return _dynamic_task_management_tool
+
+def auto_update_tasks_after_tool(tool_name: str, result: str) -> None:
+    """Automatically update tasks after MCP tool execution"""
+    try:
+        # Extract output path and analysis from result
+        output_path = "No output path available"
+        analysis = "No analysis available"
+        
+        # Try to parse JSON result
+        try:
+            result_data = json.loads(result)
+            if isinstance(result_data, dict):
+                output_path = result_data.get('output_path', result_data.get('file_path', output_path))
+                analysis = result_data.get('analysis', result_data.get('message', analysis))
+        except:
+            # If not JSON, use the result string as analysis
+            analysis = result[:200] + "..." if len(result) > 200 else result
+        
+        # Update tasks
+        task_tool = get_dynamic_task_management_tool()
+        task_tool("update_after_tool", 
+                 tool_name=tool_name, 
+                 output_path=output_path, 
+                 analysis=analysis)
+        
+        logger.info(f"✅ Tasks updated after {tool_name} execution")
+        
+    except Exception as e:
+        logger.warning(f"⚠️  Failed to update tasks after {tool_name}: {str(e)}")
 
 def get_phase3_selector():
     global _phase3_selector
@@ -770,7 +808,7 @@ def phase4_tdd_validation(
         logger.error(f"Phase 4 TDD validation failed: {e}")
         return f"❌ Phase 4 TDD validation failed: {str(e)}"
 
-'''
+
 @mcp.tool()
 async def iterative_mapping_with_feedback(
     source_fields: str,
@@ -816,7 +854,31 @@ async def iterative_mapping_with_feedback(
         
     except Exception as e:
         return f"❌ Iterative mapping failed: {str(e)}"
-'''
+
+@mcp.tool()
+def dynamic_task_management(action: str, **kwargs) -> str:
+    """
+    Dynamic Task Management System - Automatically updates task list after MCP tool executions
+    
+    Args:
+        action: The action to perform (update_after_tool, get_task_summary, add_manual_task, get_next_task, get_task_list, mark_task_completed, generate_tasks_from_tool)
+        **kwargs: Additional parameters based on action
+    
+    Returns:
+        JSON string with result information
+    """
+    try:
+        task_tool = get_dynamic_task_management_tool()
+        result = task_tool(action, **kwargs)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return json.dumps({
+            "success": False,
+            "error": f"Dynamic task management failed: {str(e)}",
+            "action": action
+        }, indent=2)
+
+
 if __name__ == "__main__":
     logger.info("🚀 Starting Connector MCP Server with Optimized RAG Tools...")
     # logger.info("📡 Server will be available via SSE transport on port 8080")
@@ -836,6 +898,7 @@ if __name__ == "__main__":
     logger.info("   • phase3_quality_suite() - Audit + TDD tests")
     logger.info("   • phase3_select_best_candidate() - Consistency selector")
     logger.info("   • phase4_tdd_validation() - TDD validation with Cursor LLM integration")
+    logger.info("   • dynamic_task_management() - Dynamic task management system")
     #mcp.run(transport="sse", port=8080) 
     # Run with stdio transport for MCP compatibility
     mcp.run()

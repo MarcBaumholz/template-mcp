@@ -12,11 +12,9 @@ from typing import Dict, Any, List, Tuple
 from datetime import datetime
 from dotenv import load_dotenv
 
-from langchain_openai import ChatOpenAI
-from langchain.schema import HumanMessage
-
 from tools._archive._archive.json_schemas import ProcessedResult, AgentResponse
 from tools.shared_utilities.request_counter import track_request
+from tools.shared_utilities.llm_client import get_llm_response
 from tools.phase1_data_extraction.upload_api_specification import retrieve_from_rag
 
 load_dotenv()
@@ -26,13 +24,9 @@ class CombinedFieldAnalysisAgent:
     """Phase 1 analyzer with RAG-backed enhancement."""
 
     def __init__(self):
-        self.llm = ChatOpenAI(
-            model=os.getenv("LLM_MODEL", "deepseek/deepseek-chat-v3.1:free"),
-            temperature=float(os.getenv("LLM_TEMPERATURE", "0.1")),
-            openai_api_key=os.getenv("OPENROUTER_API_KEY"),
-            openai_api_base=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
-            max_tokens=2000,
-        )
+        # Use the shared LLM client instead of direct langchain
+        self.model = os.getenv("LLM_MODEL", "qwen/qwen3-coder:free")
+        self.temperature = float(os.getenv("LLM_TEMPERATURE", "0.1"))
 
     def _save_results(self, analysis_result: Dict[str, Any], json_file_path: str, current_directory: str) -> Tuple[str, str]:
         try:
@@ -93,28 +87,29 @@ class CombinedFieldAnalysisAgent:
         return text
 
     def _extract_fields_via_ai(self, json_data: Dict[str, Any]) -> List[str]:
-        """Use LLM to extract ONLY relevant data fields for HR/API mapping - filtered extraction."""
+        """Use LLM to extract ONLY relevant data fields for business/API mapping - filtered extraction."""
         prompt = (
-            "You are given JSON payload data. Extract ONLY the relevant data fields for HR/API mapping.\n"
-            "FOCUS ONLY on fields that contain actual business data, NOT metadata or pagination.\n\n"
-            "EXTRACT ONLY:\n"
-            "1. Fields within 'data' arrays (id, employeeId, type, status, startDate, endDate, etc.)\n"
-            "2. Nested object fields within data (duration.value, duration.unit, etc.)\n"
-            "3. Timestamp fields within data (createdAt, updatedAt, etc.)\n\n"
-            "EXCLUDE:\n"
-            "- Pagination fields (page, pageSize, total)\n"
-            "- Top-level metadata fields (data, pagination)\n"
-            "- System fields that don't contain business data\n\n"
-            "Return ONLY the meaningful data fields that would be used for API mapping.\n\n"
+            "You are given JSON payload data. Extract the relevant data fields for API mapping.\n\n"
+            "Use your judgment to determine what fields are relevant based on the data structure and content.\n"
+            "Consider the business context and what would be useful for API integration.\n\n"
+            "EXCLUDE only obvious system/metadata fields like:\n"
+            "- Pagination (page, pageSize, total)\n"
+            "- System metadata (metadata, links, etc.)\n\n"
+            "INCLUDE any field that contains business data or would be useful for mapping.\n\n"
             f"JSON:\n{json.dumps(json_data, indent=2, ensure_ascii=False)}\n\n"
             "Return ONLY valid JSON with relevant data fields:\n"
-            "{\n  \"fields\": [\"id\", \"employeeId\", \"type\", \"status\", \"startDate\", \"endDate\", \"duration.value\", \"duration.unit\", \"createdAt\", \"updatedAt\"]\n}"
+            "{\n  \"fields\": [\"field1\", \"field2\", \"nested.field\", ...]\n}"
         )
 
-        response = self.llm.invoke([HumanMessage(content=prompt)])
-        track_request("json_analysis_agent", os.getenv("LLM_MODEL", "deepseek/deepseek-chat-v3.1:free"), 0)
+        response = get_llm_response(prompt, max_tokens=2000, model=self.model)
+        track_request("json_analysis_agent", self.model, 0)
 
-        cleaned = self._clean_json_block(response.content)
+        # Check if the response contains an error message
+        if "Error code:" in response or "User not found" in response or "401" in response:
+            # Fallback to programmatic extraction
+            return self._extract_relevant_fields_programmatically(json_data)
+
+        cleaned = self._clean_json_block(response)
         try:
             data = json.loads(cleaned)
             fields = data.get("fields") or []
@@ -159,37 +154,34 @@ class CombinedFieldAnalysisAgent:
         return fields
 
     def _extract_relevant_fields_programmatically(self, json_data: Dict[str, Any]) -> List[str]:
-        """Programmatically extract only relevant data fields, filtering out pagination and metadata."""
+        """Extract ALL fields from JSON, filtering only obvious pagination/metadata."""
         fields = []
         
-        def extract_data_fields(obj, prefix="", max_depth=4, current_depth=0):
+        def extract_all_fields(obj, prefix="", max_depth=4, current_depth=0):
             if current_depth >= max_depth:
                 return
                 
             if isinstance(obj, dict):
                 for key, value in obj.items():
-                    # Skip pagination and metadata fields
-                    if key in ['pagination', 'page', 'pageSize', 'total', 'data'] and current_depth == 0:
-                        continue
-                        
                     current_path = f"{prefix}.{key}" if prefix else key
                     
-                    # Only add fields that are within data arrays or are meaningful business fields
-                    if (prefix.startswith('data.') or 
-                        key in ['id', 'employeeId', 'type', 'status', 'startDate', 'endDate', 
-                               'createdAt', 'updatedAt', 'duration', 'value', 'unit']):
-                        fields.append(current_path)
+                    # Only skip obvious pagination/metadata fields
+                    if key in ['pagination', 'page', 'pageSize', 'total', 'metadata', 'links'] and current_depth == 0:
+                        continue
+                    
+                    # Add ALL other fields (let LLM decide what's important)
+                    fields.append(current_path)
                     
                     # Recursively extract nested fields
                     if isinstance(value, (dict, list)) and current_depth < max_depth - 1:
-                        extract_data_fields(value, current_path, max_depth, current_depth + 1)
+                        extract_all_fields(value, current_path, max_depth, current_depth + 1)
                         
             elif isinstance(obj, list) and obj:
                 # For arrays, extract fields from the first item if it's a dict
                 if isinstance(obj[0], dict):
-                    extract_data_fields(obj[0], prefix, max_depth, current_depth)
+                    extract_all_fields(obj[0], prefix, max_depth, current_depth)
         
-        extract_data_fields(json_data)
+        extract_all_fields(json_data)
         return fields
 
     def _validate_field_extraction(self, fields: List[str], json_data: Dict[str, Any]) -> Tuple[List[str], str]:
@@ -241,13 +233,19 @@ class CombinedFieldAnalysisAgent:
             f"Context JSON:\n{json.dumps(json_data, indent=2, ensure_ascii=False)}\n\n"
             "Example: {\n  \"employeeId\": {\"semantic_description\": \"Unique employee identifier\", \"use_case\": \"Join employees across systems\"}\n}"
         )
-        response = self.llm.invoke([HumanMessage(content=prompt)])
-        track_request("json_analysis_agent", os.getenv("LLM_MODEL", "qwen/qwen3-coder:free"), 0)
-        cleaned = self._clean_json_block(response.content)
+        response = get_llm_response(prompt, max_tokens=2000, model=self.model)
+        track_request("json_analysis_agent", self.model, 0)
+        
+        # Check if the response contains an error message
+        if "Error code:" in response or "User not found" in response or "401" in response:
+            # Fallback to basic field descriptions
+            return {f: {"semantic_description": f"Field: {f}", "use_case": "Data field from JSON"} for f in fields}
+        
+        cleaned = self._clean_json_block(response)
         try:
             parsed = json.loads(cleaned)
         except Exception:
-            return {f: {"semantic_description": "", "use_case": ""} for f in fields}
+            return {f: {"semantic_description": f"Field: {f}", "use_case": "Data field from JSON"} for f in fields}
         result: Dict[str, Dict[str, str]] = {}
         for f in fields:
             entry = parsed.get(f) if isinstance(parsed, dict) else None
@@ -285,7 +283,7 @@ class CombinedFieldAnalysisAgent:
                 f"{field} field type validation rules",
                 f"{field} API endpoint usage examples",
                 f"{field} data format and constraints",
-                f"absence {field} business logic",
+                f"{field} business logic and validation",
                 f"HR {field} field mapping",
             ]
             
@@ -361,7 +359,7 @@ class CombinedFieldAnalysisAgent:
                 "fields": validated_fields,
                 "descriptions": descriptions,
                 "evidence": evidence,
-                "processing_context": "HR field analysis",
+                "processing_context": "Business data field analysis",
                 "enhancement_confidence": round(avg_score, 3),
                 "total_fields_identified": len(validated_fields),
                 "field_extraction_validation": validation_note

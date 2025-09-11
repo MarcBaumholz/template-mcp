@@ -1,0 +1,172 @@
+# 🎯 Dynamic Task Management System
+
+**Last Updated:** 2025-09-11 15:55:52
+
+## 🔄 Current Tasks
+
+- [ ] **Initialize project workspace** for `Absence Management` integration
+- [ ] **Set up development environment** with required dependencies
+- [ ] **Configure environment variables** (API keys, endpoints, credentials)
+- [ ] **Verify RAG system connectivity** using `test_rag_system()`
+- [ ] **Validate file system permissions** for input/output directories
+- [ ] **Test MCP server connectivity** and tool availability
+- [ ] **Copy rules to working directory** using `copy_rules_to_working_directory()`
+- [ ] **Validate rules structure** using `get_rules_source_info()`
+- [ ] **Configure product-specific settings** in `.env` file
+- [ ] **Set up logging configuration** for `Absence Management` integration
+- [ ] **Initialize task management system** with predefined workflow
+- [ ] **Identify source data format** for `Absence Management` (JSON, XML, CSV, API)
+- [ ] **Locate source API specifications** or data schemas
+- [ ] **Validate source data accessibility** and authentication
+- [ ] **Prepare sample data files** for testing and validation
+- [ ] **Document source data structure** and field mappings
+- [ ] **Upload `Flip HRIS API` specification** to RAG system using `upload_api_specification()`
+- [ ] **Validate API specification structure** and completeness
+- [ ] **Verify endpoint documentation** and data models
+- [ ] **Check authentication requirements** and security protocols
+- [ ] **Document API capabilities** and limitations
+- [ ] **Upload `Workday API` specification** to RAG system using `upload_api_specification()`
+- [ ] **Validate target API structure** and endpoint availability
+- [ ] **Verify data model compatibility** with source system
+- [ ] **Check authentication and authorization** requirements
+- [ ] **Document target API capabilities** and constraints
+- [ ] **Analyze `Absence Management` sample data** using `analyze_json_fields_with_rag()`
+- [ ] **Extract field structure** and data types from sample files
+- [ ] **Identify key business entities** and relationships
+- [ ] **Document data quality issues** and inconsistencies
+- [ ] **Generate field mapping recommendations** based on analysis
+- [ ] **Test RAG system connectivity** using `test_rag_system()`
+- [ ] **Verify API specification collections** are properly indexed using `list_available_api_specs()`
+- [ ] **Validate semantic search capabilities** with test queries using `query_api_specification()`
+- [ ] **Check data retrieval accuracy** and relevance scoring
+- [ ] **Document RAG system performance** and limitations
+- [ ] **Query source API endpoints** using `query_api_specification()` for `Absence Management` related endpoints
+- [ ] **Save query results** to `outputs/phase2/source_api_query_results.json`
+- [ ] **Query target API endpoints** using `query_api_specification()` for matching functionality
+- [ ] **Save query results** to `outputs/phase2/target_api_query_results.json`
+- [ ] **Analyze endpoint schemas** and parameters from query results
+- [ ] **Document endpoint mappings** and data structure comparisons
+- [ ] **Generate confidence scores** for endpoint matches
+- [ ] **Generate direct API mapping prompt** using `get_direct_api_mapping_prompt()` for source and target APIs
+- [ ] **Save mapping prompt** to `outputs/phase2/direct_api_mapping_prompt.md`
+- [ ] **Execute mapping prompt with Cursor LLM** to analyze API compatibility
+- [ ] **Save Cursor LLM results** to `outputs/phase2/cursor_mapping_analysis.md`
+- [ ] **Extract field mappings** and confidence scores from Cursor analysis
+- [ ] **Document mapping quality** and completeness
+- [ ] **Run enhanced RAG analysis** using `enhanced_rag_analysis()` between source and target APIs
+- [ ] **Save enhanced analysis results** to `outputs/phase2/enhanced_rag_analysis_results.md`
+- [ ] **Extract semantic field mappings** and similarity scores
+- [ ] **Document unmapped fields** and potential gaps
+- [ ] **Generate mapping recommendations** based on RAG analysis
+- [ ] **Compare results from all three methods** (Query API, Direct Mapping, Enhanced RAG)
+- [ ] **Evaluate mapping quality** and confidence scores across methods
+- [ ] **Select best mapping approach** based on accuracy and completeness
+- [ ] **Create consolidated mapping report** with selected method results
+- [ ] **Document selection rationale** and method comparison
+- [ ] **Execute reasoning agent** using `reasoning_agent()` to validate selected mappings
+- [ ] **Provide all three method results** as input to reasoning agent
+- [ ] **Review reasoning agent report** for hallucination detection and path validation
+- [ ] **Save reasoning agent results** to `outputs/phase2/reasoning_agent_validation_report.md`
+- [ ] **Validate mapping accuracy** and identify potential issues
+- [ ] **Generate verification checklist** for manual review
+- [ ] **Present mapping results** to human reviewer for approval
+- [ ] **Review high-confidence mappings** (confidence > 80%) for accuracy
+- [ ] **Flag low-confidence mappings** (confidence < 50%) for manual review
+- [ ] **Run iterative mapping with feedback** using `iterative_mapping_with_feedback()` for unmapped fields
+- [ ] **Iterate on feedback** until all critical fields are mapped
+- [ ] **Obtain final human approval** for mapping strategy
+- [ ] **Document final mapping decisions** and rationale
+- [ ] **Reference coding rules files** from `.cursor/rules/phase3_coding_rules.mdc`
+- [ ] **Generate Kotlin code generation prompt** using `generate_kotlin_mapping_code()`
+- [ ] **Incorporate Phase 3 rules** into generation prompt
+- [ ] **Save generation prompt** to `outputs/phase3/kotlin_generation_prompt.md`
+- [ ] **Validate prompt completeness** against coding standards
+- [ ] **Generate Kotlin mapper code** using `phase3_generate_mapper()` for `Absence Management`
+- [ ] **Apply Phase 3 coding rules** (Controller/Service/Mapper pattern)
+- [ ] **Validate security annotations** and authentication handling
+- [ ] **Check error handling** and null safety implementation
+- [ ] **Verify logging configuration** and SLF4J usage
+- [ ] **Save generated code** to `outputs/phase3/Absence ManagementMapper.kt`
+- [ ] **Run quality suite** using `phase3_quality_suite()` on generated code
+- [ ] **Apply Phase 3 quality criteria** and coding standards
+- [ ] **Review quality report** and identify issues
+- [ ] **Fix code quality issues** (complexity, duplication, naming)
+- [ ] **Address security vulnerabilities** if any
+- [ ] **Optimize performance bottlenecks** and memory usage
+- [ ] **Save quality report** to `outputs/phase3/quality/quality_report.md`
+- [ ] **Select best candidate** using `phase3_select_best_candidate()` if multiple versions
+- [ ] **Compare code quality metrics** across candidates
+- [ ] **Validate business logic correctness** in selected candidate
+- [ ] **Check consistency** with Phase 3 coding rules
+- [ ] **Document selection rationale** and trade-offs
+- [ ] **Perform manual code review** of generated Kotlin mapper
+- [ ] **Validate against Phase 3 rules** and coding standards
+- [ ] **Check security implementation** and authentication
+- [ ] **Verify error handling** and edge cases
+- [ ] **Document code structure** and usage patterns
+- [ ] **Initialize TDD validation** using `phase4_tdd_validation()` for `Absence Management`
+- [ ] **Generate comprehensive test suite** with unit tests
+- [ ] **Create integration tests** for API endpoints
+- [ ] **Set up test data** and mock objects
+- [ ] **Configure test environment** and dependencies
+- [ ] **Save initial test suite** to `outputs/phase4/initial_tests/`
+- [ ] **Execute unit tests** and validate functionality
+- [ ] **Run integration tests** for end-to-end validation
+- [ ] **Check test coverage** and identify gaps
+- [ ] **Document failing tests** and error analysis
+- [ ] **Save test results** to `outputs/phase4/test_execution_results.md`
+- [ ] **Analyze failing tests** and identify root causes
+- [ ] **Fix code issues** based on test failures
+- [ ] **Improve test coverage** for uncovered scenarios
+- [ ] **Re-run tests** and validate improvements
+- [ ] **Iterate until all tests pass** or maximum iterations reached
+- [ ] **Document improvement process** and final test status
+- [ ] **Run performance tests** for `Absence Management` integration
+- [ ] **Validate response times** and throughput
+- [ ] **Check memory usage** and resource consumption
+- [ ] **Test security measures** and authentication
+- [ ] **Validate error handling** under stress conditions
+- [ ] **Save performance report** to `outputs/phase4/performance_report.md`
+- [ ] **Review production readiness** checklist
+- [ ] **Validate deployment configuration** and environment setup
+- [ ] **Check monitoring and logging** implementation
+- [ ] **Verify backup and recovery** procedures
+- [ ] **Document deployment process** and rollback procedures
+- [ ] **Obtain final production approval**
+- [ ] **Persist phase learnings** using `persist_phase_learnings()` for `Absence Management`
+- [ ] **Document mapping strategies** and best practices
+- [ ] **Record common issues** and solutions
+- [ ] **Update knowledge base** with new patterns
+- [ ] **Share learnings** with development team
+- [ ] **Generate API documentation** for `Absence Management` integration
+- [ ] **Create user guides** and usage examples
+- [ ] **Document configuration** and setup procedures
+- [ ] **Write troubleshooting guides** and FAQ
+- [ ] **Update project README** with integration details
+- [ ] **Prepare knowledge transfer** materials for `Absence Management`
+- [ ] **Create training materials** for development team
+- [ ] **Document maintenance procedures** and updates
+- [ ] **Prepare handover documentation** for operations team
+- [ ] **Schedule knowledge sharing** sessions
+- [ ] **Set up monitoring** for `Absence Management` integration
+- [ ] **Configure alerting** for errors and performance issues
+- [ ] **Create dashboards** for integration health
+- [ ] **Set up log aggregation** and analysis
+- [ ] **Test alerting system** and response procedures
+- [ ] **Monitor performance metrics** for `Absence Management` integration
+- [ ] **Identify optimization opportunities** and bottlenecks
+- [ ] **Implement performance improvements** and caching
+- [ ] **Optimize database queries** and API calls
+- [ ] **Validate performance improvements** through testing
+- [ ] **Schedule regular maintenance** for `Absence Management` integration
+- [ ] **Update dependencies** and security patches
+- [ ] **Review and update** mapping configurations
+- [ ] **Test integration** after updates
+- [ ] **Document maintenance procedures** and schedules
+
+## 📊 Task Statistics
+
+- **Total Tasks:** 159
+- **Completed:** 0
+- **Current:** 159
+- **New:** 0

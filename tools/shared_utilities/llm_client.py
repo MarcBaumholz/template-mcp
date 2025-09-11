@@ -14,7 +14,9 @@ try:
     from dotenv import load_dotenv
     # Get the directory where this script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(os.path.dirname(script_dir), '.env')  # Go up one level to connector-mcp directory
+    # Go up two levels to get to the project root where .env is located
+    project_root = os.path.dirname(os.path.dirname(script_dir))
+    env_path = os.path.join(project_root, '.env')
     load_dotenv(env_path)
 except ImportError:
     pass  # dotenv not available, environment variables should be set manually
@@ -59,8 +61,8 @@ def get_llm_response(prompt: str, model: str = None, max_tokens: int = 2000, too
     if not OPENAI_AVAILABLE:
         return "Error: OpenAI library not available. Please install it with `pip install openai`."
 
-    # Use the new API key
-    api_key = "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"
+    # Get API key from environment
+    api_key = os.getenv('OPENROUTER_API_KEY')
     
     if not model:
         model = os.getenv('OPENROUTER_MODEL', 'deepseek/deepseek-chat')

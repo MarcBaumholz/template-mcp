@@ -29,7 +29,7 @@ from tools.phase2_analysis_mapping.verify_api_specification import (
     verify_api_specification as verify_spec,
 )
 
-HIGH_LEVEL_GOAL = "Map HR data fields to API specification with verification and creative solutions"
+HIGH_LEVEL_GOAL = "Map business data fields to API specification with verification and creative solutions"
 
 
 def save_report(directory: str, content: str, prefix: str) -> str:
@@ -71,7 +71,7 @@ def _load_spec_paths(api_spec_path: str) -> Dict[str, Any]:
 
 
 def _extract_claimed_endpoints(text: str) -> List[Dict[str, str]]:
-    """Extract claimed endpoints like 'POST /absences' from free text.
+    """Extract claimed endpoints like 'POST /employees' from free text.
 
     Args:
         text: Input text containing potential endpoint mentions
@@ -152,7 +152,7 @@ def triangulate_candidates(
     api_spec_path: str,
     analysis_md_path: str,
     output_directory: str,
-    context_topic: str = "HR Management API Mapping",
+    context_topic: str = "Business Data API Mapping",
 ) -> Dict[str, Any]:
     """Run all three search strategies and build a per-field consensus table.
 
@@ -482,7 +482,7 @@ async def reasoning_agent(
             mapping_response = analyze_fields_with_rag_and_llm(
                 fields=source_fields,
                 collection_name=collection_name,
-                context_topic="HR Management API Mapping",
+                context_topic="Business Data API Mapping",
                 current_path=output_directory
             )
             strategy_log = f"RAG-based analysis (spec: {total_chars} chars)"
